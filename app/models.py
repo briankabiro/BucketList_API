@@ -1,3 +1,5 @@
+from app import db
+
 class User(db.Model):
 	"""
 		Class for a User
@@ -6,6 +8,7 @@ class User(db.Model):
 			username: name of the user
 			password: the password of the user
 	"""
+	__tablename__ = "users"
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(50), unique=True)
 	password = 	db.Column(db.String)
@@ -22,16 +25,17 @@ class Bucket(db.Model):
 			name: name of the bucket
 			items: the items that the bucket contains
 	"""
+	__tablename__ = "buckets"
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(50))
-	items = db.Column()
-	date_created = db.Column(db.DateTime, default= db.func.current_timestamp())
-	date_modified = db.Column(db.DateTime, default= db.func.current_timestamp(),onupdate=db.func.current_timestamp())
+	date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
+	date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),onupdate=db.func.current_timestamp())
 	
 	def save(self):
 		# save a bucket to the table
 		db.session.add(self)
 		db.session.commit()
+		return True
 
 	def get_all():
 		# return all the buckets in table
@@ -41,6 +45,7 @@ class Bucket(db.Model):
 		# delete a bucket from the table
 		db.session.delete(self)
 		db.commit()
+		return True
 
 	def __repr__(self):
 		# return the name of the bucket
@@ -54,11 +59,11 @@ class BucketItem(db.Model):
 			description: the text/description of an item
 	"""
 	
-	__table__ = "bucket_items"
+	__tablename__ = "bucket_items"
 	id = db.Column(db.Integer, primary_key=True)
 	description = db.Column(db.Text)
-	date_created = db.Column(db.DateTime, default = db.func.current_timestamp())
-	date_modified = db.Column(db.DateTime, default= db.func.current_timestamp(),onupdate=db.func.current_timestamp())
+	date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
+	date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
 	def save(self):
 		# save an item to the table
