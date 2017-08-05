@@ -16,7 +16,6 @@ def create_app(config_name):
 		db.create_all()
 	return app
 
-app = create_app(config_name="development")
 api = Api(app)
 
 api.add_resource(BucketListApi, '/bucketlists/<id>')
