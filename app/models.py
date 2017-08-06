@@ -35,9 +35,8 @@ class Bucket(db.Model):
 		# save a bucket to the table
 		db.session.add(self)
 		db.session.commit()
-		return True
 
-	def get_all():
+	def get_all(self):
 		# return all the buckets in table
 		return Bucket.query.all()
 
@@ -45,7 +44,6 @@ class Bucket(db.Model):
 		# delete a bucket from the table
 		db.session.delete(self)
 		db.commit()
-		return True
 
 	def __repr__(self):
 		# return the name of the bucket
