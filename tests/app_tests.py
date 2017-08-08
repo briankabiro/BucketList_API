@@ -1,10 +1,12 @@
 import unittest
 from app import db, create_app
+from run import app
 
 class AppTestCase(unittest.TestCase):
 	def setUp(self):
 		# initial config before tests are run
-		self.app = create_app(config_name='testing')
+		self.app = app
+		#create_app(config_name='testing')
 		self.client = self.app.test_client()
 		self.bucket = {'name':'Hiking'}
 
@@ -20,19 +22,20 @@ class AppTestCase(unittest.TestCase):
 		# test to check that all bucketlists are returned
 		rv = self.client.post('/bucketlists/', data=self.bucket)
 		self.assertEqual(rv.status_code, 201)
+		response = self.client.get('/bucketlists/')
+		self.assertEqual(response.status_code, 200)
 
 	def Test_get_bucketlist_by_id(self):
 		# test that bucket is returned by appending id to path
 		rv = self.client.post('/bucketlists/', data=self.bucket)
 		self.assertEqual(rv.status_code, 201)
 		result = self.client.get('/bucketlists/1')
-		print('this is result.data', result.data)
 		# expect to fail because of str(result.data)
-		self.assertIn('Hiking', result.data)
+		self.assertIn('Hiking', str(result.data))
 
 	def Test_can_update_bucketlist(self):
 		# test that the name of bucket list can be updated
-		rv = self.client.post('/bucketlists', data={'name':'Grooving'})
+		rv = self.client.post('/bucketlists/', data={'name':'Grooving'})
 		self.assertEqual(rv.status_code, 201)
 		rv = self.client.put('/bucketlists/1', data={'name':'Sleeping'})
 		bucket = self.client.get('/bucketlists/1')
