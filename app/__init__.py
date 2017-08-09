@@ -3,8 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 from instance.config import app_config
 db = SQLAlchemy()
-from app.models import User, Bucket, BucketItem
-from app.resources.bucketlist import BucketListApi, BucketListsApi
 
 
 def create_app(config_name):
@@ -17,10 +15,5 @@ def create_app(config_name):
     return app
 
 
-app = create_app(config_name='development')
-api = Api(app)
-api.add_resource(BucketListApi, '/bucketlists/<id>')
-api.add_resource(BucketListsApi, '/bucketlists/')
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
