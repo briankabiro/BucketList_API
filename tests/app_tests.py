@@ -1,10 +1,11 @@
 import unittest
-from app import db, create_app, api
+from app import db
+from run import app
 
 class AppTestCase(unittest.TestCase):
 	def setUp(self):
 		# initial config before tests are run
-		self.app = create_app(config_name='testing')
+		self.app = app
 		self.client = self.app.test_client()
 		self.bucket = {'name':'Hiking'}
 

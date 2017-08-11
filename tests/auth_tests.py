@@ -1,9 +1,10 @@
 import unittest
-from app import db, create_app, api
+from app import db
+from run import app
 
 class AuthTests(unittest.TestCase):
 	def setUp(self):
-		self.app = create_app(config_name='testing')
+		self.app = app
 		self.client = self.app.test_client()
 		self.test_user = {'username':'john', 'password':'32331'}
 		self.test_user1 = {'username':'john', 'password':'12356'}

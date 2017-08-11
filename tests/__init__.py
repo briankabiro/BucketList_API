@@ -2,7 +2,7 @@ from app import create_app, db
 from flask_restful import Api
 from app.models import User, Bucket, BucketItem
 from app.resources.bucketlist import BucketListApi, BucketListsApi
-
+import unittest
 
 class TestBase(unittest.TestCase):
 	def setUp(self):
