@@ -12,8 +12,17 @@ class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String)
+    password = db.Column(db.String(50))
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
+    
+    def save(self):
+        # save a user to the db
+        db.session.add(self)
+        db.session.commit()
+
+    def get_all(self):
+        # return all the users in table
+        return Bucket.query.all()
 
     def __repr__(self):
         # return the name of the User
