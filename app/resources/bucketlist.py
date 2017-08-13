@@ -17,6 +17,7 @@ def abort_if_bucket_doesnt_exist(id):
 class BucketListsApi(Resource):
     #endpoint /bucketlists/
     def get(self):
+        # get all bucket lists
         buckets = Bucket.query.all()
         results = []
         for bucket in buckets:
@@ -32,11 +33,12 @@ class BucketListsApi(Resource):
         return response
 
     def post(self):
+        # create a bucketlist
         parser.add_argument('name')
         args = parser.parse_args()
         bucket = Bucket(name=args['name'])
         bucket.save()
-        # return 201
+        # return the created bucketlist
         response = jsonify({
             'id': bucket.id,
             'name': bucket.name,
@@ -49,8 +51,8 @@ class BucketListsApi(Resource):
 
 class BucketListApi(Resource):
     # endpoint: /bucketlists/<id>
-    # handler for get method 
     def get(self, id):
+        # return bucketlist with id from parameter
         abort_if_bucket_doesnt_exist(id)
         bucket = get_bucket(id)
         response = jsonify({
@@ -64,18 +66,17 @@ class BucketListApi(Resource):
 
     
     def put(self, id):
-        # handler for put method
+        # update the name of a bucketlist
         parser.add_argument('name')
         args = parser.parse_args()
         abort_if_bucket_doesnt_exist(id)
         bucket = get_bucket(id)
-        print('this is args[name]', args['name'])
         bucket.name = args['name']
         bucket.save()
         return "successfully updated the bucket"
 
     def delete(self, id):
-        # handler for delete method
+        # delete a bucketlist
         abort_if_bucket_doesnt_exist(id)
         bucket = get_bucket(id)
         bucket.delete()
