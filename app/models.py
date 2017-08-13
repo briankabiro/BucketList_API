@@ -3,16 +3,16 @@ from app import db
 
 class User(db.Model):
     """
-                Class for a User
-                Attributes:
-                        id: id of a user
-                        username: name of the user
-                        password: the password of the user
-        """
+        Class for a User
+        Attributes:
+            id: id of a user
+            username: name of the user
+            password: the password of the user
+    """
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(50))
+    password = db.Column(db.String())
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
     
     def save(self):
@@ -31,11 +31,11 @@ class User(db.Model):
 
 class Bucket(db.Model):
     """
-                Class for a creating a bucket object
-                Attributes:
-                        id: unique id of the bucket
-                        name: name of the bucket
-                        items: the items that the bucket contains
+        Class for creating a bucket object
+        Attributes:
+                id: unique id of the bucket
+                name: name of the bucket
+                items: the items that the bucket contains
         """
     __tablename__ = "buckets"
     id = db.Column(db.Integer, primary_key=True)
@@ -45,6 +45,13 @@ class Bucket(db.Model):
         db.DateTime,
         default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
+    '''
+    owner = db.relationship("User", backref=db.backref("items"))
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+    '''
+    items = db.relationship("BucketItem", backref=db.backref("bucket"))
+    
+    
 
     def save(self):
         # save a bucket to the table
@@ -67,11 +74,11 @@ class Bucket(db.Model):
 
 class BucketItem(db.Model):
     """
-                Class for creating an item object
-                Attributes:
-                        id: unique id for identifying each item
-                        description: the text/description of an item
-        """
+        Class for creating an item object
+        Attributes:
+                id: unique id for identifying each item
+                description: the text/description of an item
+    """
 
     __tablename__ = "bucket_items"
     id = db.Column(db.Integer, primary_key=True)
@@ -81,6 +88,11 @@ class BucketItem(db.Model):
         db.DateTime,
         default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
+
+    '''owner = db.relationship("User", backref=db.backref("items"))
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+    '''
+    bucketlist_id = db.Column(db.Integer, db.ForeignKey('buckets.id'))
 
     def save(self):
         # save an item to the table
