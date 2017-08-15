@@ -1,13 +1,16 @@
-'''from app.models import Bucket
+from app.models import Bucket
 import unittest
-from app import db, create_app
+from run import app
+from app import db
 
 class BucketTestCase(unittest.TestCase):
 	def setUp(self):
-		self.app = create_app(config_name='testing')
+		# initial config before tests are run
+		self.app = app
+		self.client = self.app.test_client()
+
 		with self.app.app_context():
 			db.create_all()
-
 
 	def Test_bucket_saved_to_db(self):
 		# check that a created bucket is saved to db
@@ -36,4 +39,3 @@ class BucketTestCase(unittest.TestCase):
 
 if __name__ == '__main__':
 	unittest.main()
-	'''
