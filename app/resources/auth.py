@@ -54,7 +54,7 @@ class Login(Resource):
 
 		if check_password_hash(user.password, password):
 			#login the person
-			token = jwt.encode({'id': user.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, os.getenv('SECRET'))
+			token = jwt.encode({'id': user.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, os.getenv('SECRET_KEY'))
 			response = jsonify({"message": "Successfully logged in", "token": token.decode('UTF-8')})
 			response.status_code = 200
 			return response
