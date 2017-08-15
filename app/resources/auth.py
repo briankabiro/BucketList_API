@@ -5,10 +5,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import User
 import os
 import jwt
+from functools import wraps
 parser = reqparse.RequestParser()
 
 def get_user(username):
 	return User.query.filter_by(username=username).first()
+
+def requires_auth(f):
+	@wraps(f)
+	def decorated(*args, **kwargs):
+		
+		return f(*args, **kwargs)
+	return decorated
 
 class Register(Resource):
 	def post(self):
