@@ -1,6 +1,7 @@
 from flask_restful import Resource, abort, reqparse
 from flask import jsonify
 from app.models import Bucket
+from resources.base import requires_auth
 parser = reqparse.RequestParser()
 
 
@@ -16,6 +17,7 @@ def abort_if_bucket_doesnt_exist(id):
 
 class BucketListsApi(Resource):
     #endpoint /bucketlists/
+    @requires_auth
     def get(self):
         # get all bucket lists
         buckets = Bucket.query.all()
@@ -31,7 +33,8 @@ class BucketListsApi(Resource):
         response = jsonify(results)
         response.status_code = 200
         return response
-
+    
+    @requires_auth
     def post(self):
         # create a bucketlist
         parser.add_argument('name')
@@ -51,6 +54,7 @@ class BucketListsApi(Resource):
 
 class BucketListApi(Resource):
     # endpoint: /bucketlists/<id>
+    @requires_auth
     def get(self, id):
         # return bucketlist with id from parameter
         abort_if_bucket_doesnt_exist(id)
@@ -64,8 +68,9 @@ class BucketListApi(Resource):
         response.status_code = 200
         return response
 
-    
+    @requires_auth
     def put(self, id):
+        
         # update the name of a bucketlist
         parser.add_argument('name')
         args = parser.parse_args()
@@ -75,6 +80,7 @@ class BucketListApi(Resource):
         bucket.save()
         return "successfully updated the bucket"
 
+    @requires_auth
     def delete(self, id):
         # delete a bucketlist
         abort_if_bucket_doesnt_exist(id)

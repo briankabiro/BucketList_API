@@ -1,6 +1,7 @@
 from flask_restful import Resource, abort, reqparse
 from flask import jsonify
 from app.models import BucketItem
+from resources.base import requires_auth
 parser = reqparse.RequestParser()
 
 
@@ -12,7 +13,7 @@ class ItemsApi(Resource):
     '''
         endpoint: /bucketlists/<id>items/
     '''
-
+    @requires_auth
     def post(self, id):
         # add items to a bucket
         parser.add_argument('description')
@@ -34,7 +35,7 @@ class ItemApi(Resource):
     '''
         endpoint: /bucketlists/<id>/items/<item_id>
     '''
-
+    @requires_auth
     def put(self, id, item_id):
         # update item in bucketlist
         parser.add_argument('description')
@@ -47,6 +48,7 @@ class ItemApi(Resource):
         item.save()
         return jsonify({"message": "Item updated successfully"}), 201
 
+    @requires_auth
     def delete(self, id, item_id):
         # delete item from bucketlist
         item = get_item(id, item_id)
