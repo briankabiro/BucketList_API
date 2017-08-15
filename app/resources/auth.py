@@ -11,13 +11,6 @@ parser = reqparse.RequestParser()
 def get_user(username):
 	return User.query.filter_by(username=username).first()
 
-def requires_auth(f):
-	@wraps(f)
-	def decorated(*args, **kwargs):
-		
-		return f(*args, **kwargs)
-	return decorated
-
 class Register(Resource):
 	def post(self):
 		parser.add_argument('username', required=True)
