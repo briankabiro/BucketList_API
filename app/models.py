@@ -1,6 +1,5 @@
 from app import db
 
-
 class User(db.Model):
     """
         Class for a User
@@ -22,14 +21,14 @@ class User(db.Model):
 
     def get_all(self):
         # return all the users in table
-        return Bucket.query.all()
+        return User.query.all()
 
     def __repr__(self):
         # return the name of the User
         return '<User %s>' % self.username
 
 
-class Bucket(db.Model):
+class Bucketlist(db.Model):
     """
         Class for creating a bucket object
         Attributes:
@@ -37,7 +36,7 @@ class Bucket(db.Model):
                 name: name of the bucket
                 items: the items that the bucket contains
         """
-    __tablename__ = "buckets"
+    __tablename__ = "bucketlists"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
@@ -47,9 +46,9 @@ class Bucket(db.Model):
         onupdate=db.func.current_timestamp())
     '''
     owner = db.relationship("User", backref=db.backref("items"))
-    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_by = db.Column(db.Integer, db.ForeignKey('User.id'))
     '''
-    items = db.relationship("BucketItem", backref=db.backref("bucket"))
+    items = db.relationship("BucketlistItem", backref=db.backref("bucketlists"))
     
     
 
@@ -60,7 +59,7 @@ class Bucket(db.Model):
 
     def get_all(self):
         # return all the buckets in table
-        return Bucket.query.all()
+        return Bucketlist.query.all()
 
     def delete(self):
         # delete a bucket from the table
@@ -69,10 +68,10 @@ class Bucket(db.Model):
 
     def __repr__(self):
         # return the name of the bucket
-        return "<Bucket %s>" % self.name
+        return "<Bucketlist %s>" % self.name
 
 
-class BucketItem(db.Model):
+class BucketlistItem(db.Model):
     """
         Class for creating an item object
         Attributes:
@@ -80,7 +79,7 @@ class BucketItem(db.Model):
                 description: the text/description of an item
     """
 
-    __tablename__ = "bucket_items"
+    __tablename__ = "bucketlist_items"
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text)
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
@@ -90,9 +89,9 @@ class BucketItem(db.Model):
         onupdate=db.func.current_timestamp())
 
     '''owner = db.relationship("User", backref=db.backref("items"))
-    created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created_by = db.Column(db.Integer, db.ForeignKey('User.id'))
     '''
-    bucketlist_id = db.Column(db.Integer, db.ForeignKey('buckets.id'))
+    bucketlist_id = db.Column(db.Integer, db.ForeignKey('bucketlists.id'))
 
     def save(self):
         # save an item to the table
@@ -101,7 +100,7 @@ class BucketItem(db.Model):
 
     def get_all():
         # return all the items in the table
-        return BucketItem.query.all()
+        return BucketlistItem.query.all()
 
     def delete(self):
         # delete an item from the table
@@ -110,4 +109,4 @@ class BucketItem(db.Model):
 
     def __repr__(self):
         # return the description of an item
-        return "<BucketItem %s>" % self.description
+        return "<BucketlistItem %s>" % self.description
