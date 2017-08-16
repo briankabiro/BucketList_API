@@ -1,26 +1,26 @@
 from flask_restful import Resource, abort, reqparse
 from flask import jsonify
-from app.models import Bucket
-from resources.base import requires_auth
+from app.models import Bucketlist
+from app.resources.base import requires_auth
 parser = reqparse.RequestParser()
 
 
 def get_bucket(id):
     # Return the bucket from db using id
-    return Bucket.query.filter_by(id=id).first()
+    return Bucketlist.query.filter_by(id=id).first()
 
 
 def abort_if_bucket_doesnt_exist(id):
     if get_bucket(id) == None:
-        abort(404, message="Bucket {} doesn't exist".format(id))
+        abort(404, message="Bucketlist {} doesn't exist".format(id))
 
 
 class BucketListsApi(Resource):
     #endpoint /bucketlists/
-    @requires_auth
+    # @requires_auth
     def get(self):
         # get all bucket lists
-        buckets = Bucket.query.all()
+        buckets = Bucketlist.query.all()
         results = []
         for bucket in buckets:
             bucket_obj = {
@@ -34,12 +34,12 @@ class BucketListsApi(Resource):
         response.status_code = 200
         return response
     
-    @requires_auth
+    # @requires_auth
     def post(self):
         # create a bucketlist
-        parser.add_argument('name')
+        parser.add_argument('name', required=True)
         args = parser.parse_args()
-        bucket = Bucket(name=args['name'])
+        bucket = Bucketlist(name=args['name'])
         bucket.save()
         # return the created bucketlist
         response = jsonify({
@@ -68,11 +68,11 @@ class BucketListApi(Resource):
         response.status_code = 200
         return response
 
-    @requires_auth
+    #@requires_auth
     def put(self, id):
         
         # update the name of a bucketlist
-        parser.add_argument('name')
+        parser.add_argument('name', required=True)
         args = parser.parse_args()
         abort_if_bucket_doesnt_exist(id)
         bucket = get_bucket(id)
