@@ -13,12 +13,12 @@ class ItemsApi(Resource):
     '''
         endpoint: /bucketlists/<id>items/
     '''
-    #@requires_auth
-    def post(self, id):
+    @requires_auth
+    def post(self, user_id, id):
         # add items to a bucket
         parser.add_argument('description', required=True)
         args = parser.parse_args()
-        item = BucketlistItem(description=args['description'], bucketlist_id=id)
+        item = BucketlistItem(description=args[' '], bucketlist_id=id, owned_by=user_id)
         item.save()
 
         return make_response(jsonify({
@@ -26,7 +26,8 @@ class ItemsApi(Resource):
             'description': item.description,
             'date_created': item.date_created,
             'date_modified': item.date_modified,
-            'bucketlist_id': item.bucketlist_id
+            'bucketlist_id': item.bucketlist_id,
+            'owned_by': item.owned_by
         }), 201)
 
 
@@ -34,8 +35,8 @@ class ItemApi(Resource):
     '''
         endpoint: /bucketlists/<id>/items/<item_id>
     '''
-    #@requires_auth
-    def put(self, id, item_id):
+    @requires_auth
+    def put(self, user_id, id, item_id):
         # update item in bucketlist
         parser.add_argument('description', required=True)
         args = parser.parse_args()
@@ -47,8 +48,8 @@ class ItemApi(Resource):
         item.save()
         return make_response(jsonify({"message": "Item updated successfully"}), 201)
 
-    #@requires_auth
-    def delete(self, id, item_id):
+    @requires_auth
+    def delete(self, user_id, id, item_id):
         # delete item from bucketlist
         item = get_item(id, item_id)
         if not item:
