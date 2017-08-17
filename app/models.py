@@ -13,6 +13,7 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True)
     password = db.Column(db.String())
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
+    bucketlists = db.relationship('Bucketlist', order_by='Bucketlist.id')
     
     def save(self):
         # save a user to the db
@@ -44,22 +45,18 @@ class Bucketlist(db.Model):
         db.DateTime,
         default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
-    '''
-    owner = db.relationship("User", backref=db.backref("items"))
-    created_by = db.Column(db.Integer, db.ForeignKey('User.id'))
-    '''
+    
+    owned_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     items = db.relationship("BucketlistItem", backref=db.backref("bucketlists"))
     
-    
-
     def save(self):
         # save a bucket to the table
         db.session.add(self)
         db.session.commit()
 
-    def get_all(self):
-        # return all the buckets in table
-        return Bucketlist.query.all()
+    def get_all(user_id):
+        # return all the buckets that belong to a given user
+        return Bucketlist.query.filter_by(owned_by=user_id)
 
     def delete(self):
         # delete a bucket from the table
@@ -87,10 +84,8 @@ class BucketlistItem(db.Model):
         db.DateTime,
         default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
-
-    '''owner = db.relationship("User", backref=db.backref("items"))
-    created_by = db.Column(db.Integer, db.ForeignKey('User.id'))
-    '''
+    
+    owned_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     bucketlist_id = db.Column(db.Integer, db.ForeignKey('bucketlists.id'))
 
     def save(self):
