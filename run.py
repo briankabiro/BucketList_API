@@ -1,8 +1,9 @@
 from app import create_app
 from flask_restful import Api
+from app.resources.items import ItemApi, ItemsApi
 from app.resources.bucketlist import BucketListApi, BucketListsApi
 from app.resources.auth import Register, Login, ResetPassword, Logout
-from app.resources.items import ItemApi, ItemsApi
+
 
 app = create_app(config_name='development')
 api = Api(app)
