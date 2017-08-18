@@ -63,7 +63,8 @@ class ResetPassword(Resource):
 		parser.add_argument('password')
 		args = parser.parse_args()	
 		user = get_user(args['username'])
-		user.password = args['password']
+		new_password = generate_password_hash(args['password'])
+		user.password = new_password
 		user.save()
 		response = jsonify({"message": "Password successfully changed"})
 		response.status_code = 201
