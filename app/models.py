@@ -94,7 +94,7 @@ class BucketlistItem(db.Model):
         db.session.commit()
 
     def get_all():
-        # return all the items in the table
+        # return all the items that belong to user's bucketlist
         return BucketlistItem.query.all()
 
     def delete(self):

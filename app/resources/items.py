@@ -1,5 +1,5 @@
 from flask_restful import Resource, abort, reqparse
-from flask import jsonify, make_response
+from flask import jsonify, make_response, request
 from app.models import BucketlistItem
 from app.resources.base import requires_auth
 parser = reqparse.RequestParser()
@@ -14,11 +14,31 @@ class ItemsApi(Resource):
         endpoint: /bucketlists/<id>items/
     '''
     @requires_auth
+    def get(self, user_id, id):
+        query = request.args.get('q')
+        limit = request.args.get('limit')
+        if query:
+            item = BucketlistItem.query.filter(BucketlistItem.description == query).first()
+            if item:
+                response = jsonify({
+                    'id': item.id,
+                    'description': item.description,
+                    'date_created': item.date_created,
+                    'date_modified': item.date_modified,
+                    'owned_by': item.owned_by,
+                    'bucketlist_id': item.bucketlist_id
+                })
+                response.status_code = 200
+                return response         
+            abort(404, message="Item with name '{}' doesn't exist".format(query))
+
+
+    @requires_auth
     def post(self, user_id, id):
         # add items to a bucket
         parser.add_argument('description', required=True)
         args = parser.parse_args()
-        item = BucketlistItem(description=args[' '], bucketlist_id=id, owned_by=user_id)
+        item = BucketlistItem(description=args['description'], bucketlist_id=id, owned_by=user_id)
         item.save()
 
         return make_response(jsonify({

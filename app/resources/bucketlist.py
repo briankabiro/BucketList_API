@@ -1,5 +1,5 @@
 from flask_restful import Resource, abort, reqparse
-from flask import jsonify
+from flask import jsonify, request
 from app.models import Bucketlist
 from app.resources.base import requires_auth
 parser = reqparse.RequestParser()
@@ -20,6 +20,27 @@ class BucketListsApi(Resource):
     @requires_auth
     def get(self, user_id):
         # get all bucket lists
+        query = request.args.get('q')
+        limit = request.args.get('limit')
+        if query:
+            bucket = Bucketlist.query.filter(Bucketlist.name == query).first()
+            print("this is bucket", bucket)
+            response = jsonify({
+                'id': bucket.id,
+                'name': bucket.name,
+                'date_created': bucket.date_created,
+                'date_modified': bucket.date_modified,
+                'owned_by': bucket.owned_by
+            })
+            response.status_code = 200
+            return response         
+            abort(404, message="Bucketlist with name '{}' doesn't exist".format(query))
+        
+        if limit:
+            limit = int(limit)
+            buckets = Bucketlist.get_all(user_id).paginate(page=1, per_page=limit, error_out=False)
+            print('this is the pagination object', buckets)
+        
         buckets = Bucketlist.get_all(user_id)
         results = []
         for bucket in buckets:
