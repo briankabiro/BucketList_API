@@ -1,17 +1,7 @@
 import unittest
-from app import db
-from run import app
+from tests import AuthTestBase
 
-class AuthTests(unittest.TestCase):
-	def setUp(self):
-		self.app = app
-		self.client = self.app.test_client()
-		self.test_user = {'username':'john', 'password':'32331'}
-		self.test_user1 = {'username':'john', 'password':'12356'}
-		
-		with self.app.app_context():
-			db.create_all()
-
+class AuthTests(AuthTestBase):
 	def Test_register(self):
 		# test post request for register endpoint
 		response = self.client.post('/auth/register', data=self.test_user)
@@ -26,7 +16,6 @@ class AuthTests(unittest.TestCase):
 	def Test_unique_registration(self):
 		self.client.post('/auth/register', data=self.test_user)
 		rv = self.client.post('/auth/register', data=self.test_user1)
-		print("this is rv", rv)
 		self.assertEqual(rv.status_code, 303)
 
 	def Test_invalid_username(self):
@@ -51,8 +40,3 @@ class AuthTests(unittest.TestCase):
 		# test post request for logout endpoint
 		self.client.post('/auth/logout')
 	'''
-	def tearDown(self):
-		# check how to tear down db
-		with self.app.app_context():
-			db.session.remove()
-			db.drop_all()
