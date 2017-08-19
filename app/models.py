@@ -93,9 +93,9 @@ class BucketlistItem(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def get_all():
+    def get_all(user_id, bucketlist_id):
         # return all the items that belong to user's bucketlist
-        return BucketlistItem.query.all()
+        return BucketlistItem.query.all(owned_by=user_id, bucketlist_id=bucketlist_id)
 
     def delete(self):
         # delete an item from the table
