@@ -22,39 +22,59 @@ class BucketListsApi(Resource):
         # get all bucket lists
         query = request.args.get('q')
         limit = request.args.get('limit')
+        
         if query:
             bucket = Bucketlist.query.filter(Bucketlist.name == query).first()
-            print("this is bucket", bucket)
-            response = jsonify({
-                'id': bucket.id,
-                'name': bucket.name,
-                'date_created': bucket.date_created,
-                'date_modified': bucket.date_modified,
-                'owned_by': bucket.owned_by
-            })
-            response.status_code = 200
-            return response         
-            abort(404, message="Bucketlist with name '{}' doesn't exist".format(query))
+            if bucket:
+                response = jsonify({
+                    'id': bucket.id,
+                    'name': bucket.name,
+                    'date_created': bucket.date_created,
+                    'date_modified': bucket.date_modified,
+                    'owned_by': bucket.owned_by
+                })
+                response.status_code = 200
+                return response       
+            else:
+                abort(404, message="Bucketlist with name '{}' doesn't exist".format(query))
         
         if limit:
             limit = int(limit)
-            buckets = Bucketlist.get_all(user_id).paginate(page=1, per_page=limit, error_out=False)
-            print('this is the pagination object', buckets)
+            page = 1
+            buckets = Bucketlist.query.filter_by(owned_by=user_id).paginate(page, limit, error_out=False)
+            print('this is the pagination object', dir(buckets))
+            print(buckets.items)
+            results = []
+            for bucket in buckets.items:
+                bucket_obj = {
+                    'id': bucket.id,
+                    'name': bucket.name,
+                    'date_created': bucket.date_created,
+                    'date_modified': bucket.date_modified,
+                    'owned_by': bucket.owned_by,
+                    'items': bucket.items
+                }
+                results.append(bucket_obj)
+            response = jsonify(results)
+            response.status_code = 200
+            return response
         
-        buckets = Bucketlist.get_all(user_id)
-        results = []
-        for bucket in buckets:
-            bucket_obj = {
-                'id': bucket.id,
-                'name': bucket.name,
-                'date_created': bucket.date_created,
-                'date_modified': bucket.date_modified,
-                'owned_by': bucket.owned_by
-            }
-            results.append(bucket_obj)
-        response = jsonify(results)
-        response.status_code = 200
-        return response
+        else:
+            buckets = Bucketlist.get_all(user_id)
+            results = []
+            for bucket in buckets:
+                bucket_obj = {
+                    'id': bucket.id,
+                    'name': bucket.name,
+                    'date_created': bucket.date_created,
+                    'date_modified': bucket.date_modified,
+                    'owned_by': bucket.owned_by,
+                    'items': bucket.items
+                }
+                results.append(bucket_obj)
+            response = jsonify(results)
+            response.status_code = 200
+            return response
     
     @requires_auth
     def post(self, user_id):
@@ -69,7 +89,8 @@ class BucketListsApi(Resource):
             'name': bucket.name,
             'date_created': bucket.date_created,
             'date_modified': bucket.date_modified,
-            'owned_by': bucket.owned_by
+            'owned_by': bucket.owned_by,
+            'items': bucket.items
         })
         response.status_code = 201
         return response
@@ -87,7 +108,8 @@ class BucketListApi(Resource):
             'name': bucket.name,
             'date_created': bucket.date_created,
             'date_modified': bucket.date_modified,
-            'owned_by': bucket.owned_by
+            'owned_by': bucket.owned_by,
+            'items': bucket.items
         })
         response.status_code = 200
         return response

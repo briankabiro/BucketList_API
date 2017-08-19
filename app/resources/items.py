@@ -30,9 +30,34 @@ class ItemsApi(Resource):
                 })
                 response.status_code = 200
                 return response         
-            abort(404, message="Item with name '{}' doesn't exist".format(query))
+            else:
+                abort(404, message="Item with name '{}' doesn't exist".format(query))
 
+        if limit:
+            limit = int(limit)
+            page = 1
+            items = BucketlistItem.query.filter_by(
+                owned_by=user_id, 
+                bucketlist_id=id
+                ).paginate(page, limit, error_out=False)
 
+            print('this is the pagination object', dir(items))
+            print(items.items)
+            results = []
+            for item in items.items:
+                item_obj = {
+                    'id': item.id,
+                    'description': item.description,
+                    'date_created': item.date_created,
+                    'date_modified': item.date_modified,
+                    'owned_by': item.owned_by,
+                    'bucketlist_id': item.bucketlist_id
+                }
+                results.append(item_obj)
+            response = jsonify(results)
+            response.status_code = 200
+            return response      
+        
     @requires_auth
     def post(self, user_id, id):
         # add items to a bucket
