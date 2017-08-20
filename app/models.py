@@ -1,4 +1,9 @@
+import os
+import jwt
+import datetime
 from app import db
+from sqlalchemy.ext.hybrid import hybrid_property
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
     """
@@ -14,6 +19,22 @@ class User(db.Model):
     password = db.Column(db.String())
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
     bucketlists = db.relationship('Bucketlist', order_by='Bucketlist.id')
+    
+    def __init__(self, username, password):
+        self.username = username
+        self.password = generate_password_hash(password)
+    
+    def authenticate_password(self, password):
+        # check if passwords match
+        return check_password_hash(self.password, password)
+
+    def generate_token(self, id):
+        # generate token on authentication
+        return jwt.encode({'id': id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, os.getenv('SECRET_KEY'))
+
+    def reset_password(self, new_password):
+        # reset password
+        self.password = generate_password_hash(new_password)
     
     def save(self):
         # save a user to the db
@@ -72,13 +93,14 @@ class BucketlistItem(db.Model):
     """
         Class for creating an item object
         Attributes:
-                id: unique id for identifying each item
-                description: the text/description of an item
+            id: unique id for identifying each item
+            description: the text/description of an item
     """
 
     __tablename__ = "bucketlist_items"
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text)
+    is_done = db.Column(db.Boolean, default=False)
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
     date_modified = db.Column(
         db.DateTime,
