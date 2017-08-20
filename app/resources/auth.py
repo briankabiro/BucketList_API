@@ -1,10 +1,6 @@
 from flask_restful import Resource, abort, reqparse
 from flask import jsonify
-import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import User
-import os
-import jwt
 from functools import wraps
 parser = reqparse.RequestParser()
 
@@ -16,8 +12,11 @@ class Register(Resource):
 		parser.add_argument('username', required=True)
 		parser.add_argument('password', required=True)
 		args = parser.parse_args()
-		username, password = args['username'], generate_password_hash(args['password'])
+		username, password = args['username'], args['password']
 		
+		if not username or not password:
+			return {"message": "Username or Password cannot be blank"}
+
 		if get_user(username) != None:
 			response = jsonify({"message": "User already exists"})
 			response.status_code = 303
@@ -34,8 +33,8 @@ class Register(Resource):
 
 class Login(Resource):
 	def post(self):
-		parser.add_argument('username')
-		parser.add_argument('password')
+		parser.add_argument('username', required=True)
+		parser.add_argument('password', required=True)
 		args = parser.parse_args()
 		username, password = args['username'], args['password']
 		user = get_user(username)
@@ -45,9 +44,9 @@ class Login(Resource):
 			response.status_code = 401
 			return response
 
-		if check_password_hash(user.password, password):
+		if user.authenticate_password(password):
 			#login the person
-			token = jwt.encode({'id': user.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, os.getenv('SECRET_KEY'))
+			token = user.generate_token(user.id)
 			response = jsonify({"message": "Successfully logged in", "token": token.decode('UTF-8')})
 			response.status_code = 200
 			return response
@@ -62,13 +61,20 @@ class ResetPassword(Resource):
 		parser.add_argument('username')
 		parser.add_argument('password')
 		args = parser.parse_args()	
-		user = get_user(args['username'])
-		new_password = generate_password_hash(args['password'])
-		user.password = new_password
-		user.save()
-		response = jsonify({"message": "Password successfully changed"})
-		response.status_code = 201
-		return response
+		username, password = args['username'], args['password']
+		user = get_user(username)
+
+		if password == None:
+			return {"message": "Password cannot be blank"}
+
+		if user:
+			user.reset_password(password)
+			user.save()
+			response = jsonify({"message": "Password successfully changed"})
+			response.status_code = 201
+			return response
+		else:
+			return {"message": "User doesn't exist"}
 
 
 class Logout(Resource):
