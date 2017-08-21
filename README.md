@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/briankabiro/BucketList_API.svg?branch=develop)](https://travis-ci.org/briankabiro/BucketList_API)
+[![Coverage Status](https://coveralls.io/repos/github/briankabiro/BucketList_API/badge.svg?branch=develop)](https://coveralls.io/github/briankabiro/BucketList_API?branch=develop)
 # Flask Bucket List API
 
 A RESTful API for a bucketlist web app built with Flask
