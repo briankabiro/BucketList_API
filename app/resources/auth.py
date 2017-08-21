@@ -1,7 +1,8 @@
-from flask_restful import Resource, abort, reqparse
+from flask_restful import Resource, abort, reqparse, marshal
 from flask import jsonify
 from app.models import User
 from functools import wraps
+from app.serializers.serializers import user_serializer
 parser = reqparse.RequestParser()
 
 def get_user(username):
