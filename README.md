@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/briankabiro/BucketList_API.svg?branch=develop)](https://travis-ci.org/briankabiro/BucketList_API)
 # Flask Bucket List API
 
 A RESTful API for a bucketlist web app built with Flask
