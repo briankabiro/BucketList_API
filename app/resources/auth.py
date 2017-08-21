@@ -30,10 +30,22 @@ class Register(Resource):
 			"message":"Account successfully created"
 		})
 		response.status_code = 201
-		return response
+		return marshal(user, user_serializer), 201
 
 class Login(Resource):
 	def post(self):
+		"""
+		---
+		tags:
+		  - restful
+		parameters:
+		  - in: path
+		  name: username
+		  required: true
+		responses:
+		  200:
+		     description: name of user
+		"""
 		parser.add_argument('username', required=True)
 		parser.add_argument('password', required=True)
 		args = parser.parse_args()
