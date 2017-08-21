@@ -18,3 +18,7 @@ bucketlist_serializer = {
 	'owned_by': fields.Integer,
 	'items': fields.Nested(bucketlist_item_serializer)
 }
+
+user_serializer = {
+	'username': fields.String
+}
