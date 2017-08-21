@@ -1,12 +1,16 @@
 import unittest
 from tests import AuthTestBase
 import json
+from app.models import User
 
 class AuthTests(AuthTestBase):
 	def Test_register(self):
 		# test post request for register endpoint
 		response = self.client.post('/auth/register', data=self.test_user)
+		data = json.loads(response.data)
 		self.assertEqual(response.status_code, 201)
+		self.assertEqual(self.test_user['username'], data['username'])
+
 
 	def Test_null_values(self):
 		rv = self.client.post('/auth/register', data={'username':'', 'password':''})
