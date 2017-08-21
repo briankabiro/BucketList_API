@@ -48,3 +48,4 @@ Temporary Items
 
 myenv/
 __pycache__/
+migrations/
