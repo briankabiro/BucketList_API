@@ -4,12 +4,39 @@ from app.models import User
 from functools import wraps
 from app.serializers.serializers import user_serializer
 parser = reqparse.RequestParser()
+from flask_restful_swagger_2 import swagger
 
 def get_user(username):
 	return User.query.filter_by(username=username).first()
 
 class Register(Resource):
+	@swagger.doc({
+		'tags': ['create a new user'],
+		'description': 'Create a User',
+		'parameters': [
+			{
+				"name": "username",
+				"description": "The username of the user",
+				"in": "path",
+				"type": "string"
+			},
+			{
+				"name": "password",
+				"description": "The password of the User",
+				"in": "path",
+				"type": "string"
+			}
+		],
+		'responses': {
+			'201': {
+				'description': "Account successfully created"
+			}
+		}
+	})
+
+
 	def post(self):
+		""" validate request to create a user """
 		parser.add_argument('username', required=True)
 		parser.add_argument('password', required=True)
 		args = parser.parse_args()
@@ -34,18 +61,7 @@ class Register(Resource):
 
 class Login(Resource):
 	def post(self):
-		"""
-		---
-		tags:
-		  - restful
-		parameters:
-		  - in: path
-		  name: username
-		  required: true
-		responses:
-		  200:
-		     description: name of user
-		"""
+		""" validate request to login """
 		parser.add_argument('username', required=True)
 		parser.add_argument('password', required=True)
 		args = parser.parse_args()
