@@ -46,6 +46,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+
+*.pyc 
 myenv/
 __pycache__/
 migrations/
