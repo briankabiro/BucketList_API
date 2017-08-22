@@ -11,7 +11,7 @@ before_script:
 
 env:
   global:
-    - TEST_DATABASE_URI=postgresql://postgres:@localhost/test_db
+    - TEST_DATABASE_URL=postgresql://postgres:@localhost/test_db
     - SECRET_KEY=1213bkajlkdjkldajsflk
 
 install: 
