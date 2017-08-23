@@ -6,12 +6,17 @@
 A RESTful API for a bucketlist web app built with Flask
 
 ## How to Setup the Project
-1. Clone the repo by running ```git clone https://github.com/briankabiro/BucketList_API.git```.
-2. Install the required packages:
+1. Create a folder that will host the project ```mkdir <project_name>```
+2. ```cd``` into the created folder
+3. Clone the repo by running ```git clone https://github.com/briankabiro/BucketList_API.git```.
+4. Install the required packages:
 ```
 pip install -r requirements.txt
 ```
-3. Start the app by running ```python run.py```
+5. Create a migrations folder ```python manage.py db init```
+6. Migrate the migrations ```python manage.py db migrate```
+7. ```python manage.py db update```
+. Start the app by running ```python run.py```
 
 
 ## Tests
