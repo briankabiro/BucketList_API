@@ -25,7 +25,7 @@ class BucketListsApi(Resource):
     @requires_auth
     @swag_from(bucketlists_get_dict)
     def get(self, user_id):
-        # get all bucket lists
+    """ get all bucket lists """
         query = request.args.get('q')
         limit = request.args.get('limit')
         
@@ -61,7 +61,7 @@ class BucketListsApi(Resource):
     @requires_auth
     @swag_from(bucketlists_post_dict)
     def post(self, user_id):
-        # create a bucketlist
+        """ create a bucketlist """
         parser.add_argument('name', required=True)
         args = parser.parse_args()
         name = args['name']
@@ -79,7 +79,7 @@ class BucketListApi(Resource):
     @requires_auth
     @swag_from(bucketlist_get_dict)
     def get(self, user_id, id):
-        # return bucketlist with id from parameter
+        """ return bucketlist with id from parameter """
         abort_if_bucket_doesnt_exist(id, user_id)
         bucket = get_bucket(id, user_id)
         return marshal(bucket, bucketlist_serializer), 200
@@ -87,7 +87,7 @@ class BucketListApi(Resource):
     @requires_auth
     @swag_from(bucketlist_put_dict)
     def put(self, user_id, id):
-        # update the name of a bucketlist
+        """ update the name of a bucketlist """
         parser.add_argument('name', required=True)
         args = parser.parse_args()
         name = args['name']
@@ -102,7 +102,7 @@ class BucketListApi(Resource):
     @requires_auth
     @swag_from(bucketlist_delete_dict)
     def delete(self, user_id, id):
-        # delete a bucketlist
+        """ delete a bucketlist """
         abort_if_bucket_doesnt_exist(id, user_id)
         bucket = get_bucket(id, user_id)
         bucket.delete()

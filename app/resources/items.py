@@ -19,6 +19,7 @@ class ItemsApi(Resource):
     @requires_auth
     @swag_from(items_get_dict)
     def get(self, user_id, id):
+        """ Return items depending on limit and query """
         query = request.args.get('q')
         limit = request.args.get('limit')
         if query:
@@ -67,7 +68,7 @@ class ItemsApi(Resource):
     @requires_auth
     @swag_from(items_post_dict)
     def post(self, user_id, id):
-        # add items to a bucket
+        """ add items to a bucket """
         parser.add_argument('description', required=True)
         args = parser.parse_args()
         description = args['description']
@@ -94,7 +95,7 @@ class ItemApi(Resource):
     @requires_auth
     @swag_from(item_put_dict)
     def put(self, user_id, id, item_id):
-        # update item in bucketlist
+        """ update item in bucketlist """
         parser.add_argument('description', required=True)
         args = parser.parse_args()
         item = get_item(id, item_id)
@@ -112,7 +113,7 @@ class ItemApi(Resource):
     @requires_auth
     @swag_from(item_delete_dict)
     def delete(self, user_id, id, item_id):
-        # delete item from bucketlist
+        """ delete item from bucketlist """
         item = get_item(id, item_id)
         if not item:
             abort(404, message="Item {} doesn't exist".format(item_id))
