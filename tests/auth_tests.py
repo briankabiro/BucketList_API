@@ -44,6 +44,10 @@ class AuthTests(AuthTestBase):
 		self.client.post('/auth/register', data=self.test_user)
 		rv = self.client.post('/auth/reset-password', data=self.test_user1)
 		self.assertEqual(rv.status_code, 200)
+
+	def Test_auth_decorator(self):
+		rv = self.client.get('/bucketlists/')
+		self.assertEqual(rv.status_code, 401)
 	
 	'''	
 	def Test_logout(self):
