@@ -46,7 +46,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-
+*.coverage
 *.pyc 
 myenv/
 __pycache__/
