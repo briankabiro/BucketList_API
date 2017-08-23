@@ -8,7 +8,11 @@ import os
 
 app = create_app(config_name='development')
 api = Api(app)
+# app.config['SWAGGER'] = {
+# 	'title': 'Bucketlist API'
+# }
 Swagger(app)
+
 api.add_resource(BucketListApi, '/bucketlists/<id>')
 api.add_resource(BucketListsApi, '/bucketlists/')
 api.add_resource(Register, '/auth/register')

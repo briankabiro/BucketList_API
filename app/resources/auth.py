@@ -5,13 +5,13 @@ from functools import wraps
 from app.serializers.serializers import user_serializer
 parser = reqparse.RequestParser()
 from flasgger import swag_from
-from app.swagger_dicts import login_dict
+from app.swagger_dicts import login_dict, register_dict, reset_dict
 
 def get_user(username):
 	return User.query.filter_by(username=username).first()
 
 class Register(Resource):
-	@swag_from(login_dict)
+	@swag_from(register_dict)
 	def post(self):
 		""" validate request to create a user """
 		parser.add_argument('username', required=True)
@@ -37,6 +37,7 @@ class Register(Resource):
 		return marshal(user, user_serializer), 201
 
 class Login(Resource):
+	@swag_from(login_dict)
 	def post(self):
 		""" validate request to login """
 		parser.add_argument('username', required=True)
@@ -63,7 +64,9 @@ class Login(Resource):
 	
 			
 class ResetPassword(Resource):
+	@swag_from(reset_dict)
 	def post(self):
+		# reset existing user's password
 		parser.add_argument('username')
 		parser.add_argument('password')
 		args = parser.parse_args()	
@@ -77,7 +80,7 @@ class ResetPassword(Resource):
 			user.reset_password(password)
 			user.save()
 			response = jsonify({"message": "Password successfully changed"})
-			response.status_code = 201
+			response.status_code = 200
 			return response
 		else:
 			return {"message": "User doesn't exist"}

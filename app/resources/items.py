@@ -3,6 +3,9 @@ from flask import jsonify, make_response, request
 from app.models import BucketlistItem
 from app.resources.base import requires_auth
 parser = reqparse.RequestParser()
+from flasgger import swag_from
+from app.swagger_dicts import item_put_dict, item_delete_dict
+from app.swagger_dicts import items_get_dict, items_post_dict
 
 
 def get_item(id, item_id):
@@ -14,6 +17,7 @@ class ItemsApi(Resource):
         endpoint: /bucketlists/<id>items/
     '''
     @requires_auth
+    @swag_from(items_get_dict)
     def get(self, user_id, id):
         query = request.args.get('q')
         limit = request.args.get('limit')
@@ -59,10 +63,14 @@ class ItemsApi(Resource):
             return response      
         
     @requires_auth
+    @swag_from(items_post_dict)
     def post(self, user_id, id):
         # add items to a bucket
         parser.add_argument('description', required=True)
         args = parser.parse_args()
+        if not args['description']:
+            return {"message": "The description of an item cannot be blank"}
+            
         item = BucketlistItem(description=args['description'], bucketlist_id=id, owned_by=user_id)
         item.save()
 
@@ -81,6 +89,7 @@ class ItemApi(Resource):
         endpoint: /bucketlists/<id>/items/<item_id>
     '''
     @requires_auth
+    @swag_from(item_put_dict)
     def put(self, user_id, id, item_id):
         # update item in bucketlist
         parser.add_argument('description', required=True)
@@ -91,9 +100,10 @@ class ItemApi(Resource):
 
         item.description = args['description']
         item.save()
-        return make_response(jsonify({"message": "Item updated successfully"}), 201)
+        return make_response(jsonify({"message": "Item updated successfully"}), 200)
 
     @requires_auth
+    @swag_from(item_delete_dict)
     def delete(self, user_id, id, item_id):
         # delete item from bucketlist
         item = get_item(id, item_id)
@@ -102,4 +112,3 @@ class ItemApi(Resource):
 
         item.delete()
         return make_response(jsonify({"message": "Item was deleted"}), 200)
-        # add deleted status code
