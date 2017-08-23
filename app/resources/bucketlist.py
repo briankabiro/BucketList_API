@@ -25,7 +25,7 @@ class BucketListsApi(Resource):
     @requires_auth
     @swag_from(bucketlists_get_dict)
     def get(self, user_id):
-    """ get all bucket lists """
+        """ get all bucket lists """
         query = request.args.get('q')
         limit = request.args.get('limit')
         
