@@ -60,7 +60,9 @@ class ItemsApi(Resource):
                 results.append(item_obj)
             response = jsonify(results)
             response.status_code = 200
-            return response      
+            return response
+
+        return make_response(jsonify({"message" : "You need to specify the limit or the query parameters"}), 400)
         
     @requires_auth
     @swag_from(items_post_dict)
@@ -68,7 +70,8 @@ class ItemsApi(Resource):
         # add items to a bucket
         parser.add_argument('description', required=True)
         args = parser.parse_args()
-        if not args['description']:
+        description = args['description']
+        if not description or description.isspace():
             return {"message": "The description of an item cannot be blank"}
             
         item = BucketlistItem(description=args['description'], bucketlist_id=id, owned_by=user_id)
@@ -97,8 +100,12 @@ class ItemApi(Resource):
         item = get_item(id, item_id)
         if not item:
             abort(404, message="Item {} doesn't exist".format(item_id))
+        
+        description = args['description']
+        if not description or description.isspace():
+            return {"message": "The description of an item cannot be blank"}
 
-        item.description = args['description']
+        item.description = description
         item.save()
         return make_response(jsonify({"message": "Item updated successfully"}), 200)
 
