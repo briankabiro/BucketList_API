@@ -18,7 +18,7 @@ class ItemTests(TestBase):
         rv = self.client.put(
             '/bucketlists/1/items/1', headers=self.headers, data=self.item1)
 
-        self.assertEqual(rv.status_code, 201)
+        self.assertEqual(rv.status_code, 200)
 
     def Test_item_is_deleted(self):
         # test to check that an item is deleted from bucketlist

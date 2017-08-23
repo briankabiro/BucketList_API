@@ -43,7 +43,7 @@ class AuthTests(AuthTestBase):
 		# test post request for reset-password endpoint
 		self.client.post('/auth/register', data=self.test_user)
 		rv = self.client.post('/auth/reset-password', data=self.test_user1)
-		self.assertEqual(rv.status_code, 201)
+		self.assertEqual(rv.status_code, 200)
 	
 	'''	
 	def Test_logout(self):
