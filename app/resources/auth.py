@@ -19,7 +19,7 @@ class Register(Resource):
 		args = parser.parse_args()
 		username, password = args['username'], args['password']
 		
-		if not username or not password:
+		if not username or not password or username.isspace() or password.isspace():
 			return {"message": "Username or Password cannot be blank"}
 
 		if get_user(username) != None:

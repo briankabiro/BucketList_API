@@ -64,9 +64,11 @@ class BucketListsApi(Resource):
         # create a bucketlist
         parser.add_argument('name', required=True)
         args = parser.parse_args()
-        if not name:
+        name = args['name']
+
+        if not name or name.isspace():
             return {"message": "Name of Bucketlist cannot be blank"}
-        bucket = Bucketlist(name=args['name'], owned_by=user_id)
+        bucket = Bucketlist(name=name, owned_by=user_id)
         bucket.save()
         # return the created bucketlist
         return marshal(bucket, bucketlist_serializer), 201
@@ -88,7 +90,10 @@ class BucketListApi(Resource):
         # update the name of a bucketlist
         parser.add_argument('name', required=True)
         args = parser.parse_args()
+        name = args['name']
         abort_if_bucket_doesnt_exist(id, user_id)
+        if not name or name.isspace():
+            return {"message": "Name of Bucketlist cannot be blank"}
         bucket = get_bucket(id, user_id)
         bucket.name = args['name']
         bucket.save()
