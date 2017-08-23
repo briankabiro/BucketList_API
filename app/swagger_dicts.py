@@ -66,6 +66,15 @@ reset_dict = {
 }
 
 bucketlists_get_dict = {
+  "parameters":[
+    {
+      "name":"Authorization",
+      "description":"Bearer <token>",
+      "in":"header",
+      "required": True,
+      "type": "string",
+    }
+  ],
   "responses": {
     "200": {
       "description": "Bucketlists are returned"
@@ -73,6 +82,9 @@ bucketlists_get_dict = {
     "404":{
       "description": "The bucketlist doesn't exist"
     },
+    "401": {
+      "description": "Authorization header is missing"
+    }
   }
 }
 
@@ -87,7 +99,8 @@ bucketlists_post_dict = {
     },
     {
       "name":"Authorization",
-      "in":"headers",
+      "description":"Bearer <token>",
+      "in":"header",
       "required": True,
       "type": "string"
     }
@@ -107,14 +120,25 @@ bucketlist_get_dict = {
   "parameters": [
     {
       "name": "id",
+      "description":"Id of the bucketlist",
       "in": "path",
       "type": "integer",
       "required": True
+    },
+    {
+      "name":"Authorization",
+      "description":"Bearer <token>",
+      "in":"header",
+      "required": True,
+      "type": "string",
     }
   ],
   "responses": {
     "200": {
       "description": "Bucketlist with specified id is returned"
+    },
+    "401": {
+      "description": "Authorization header is missing"
     }
   }  
 }
@@ -124,6 +148,7 @@ bucketlist_put_dict = {
       "name": "id",
       "in": "path",
       "type": "integer",
+      "description":"Id of the bucketlist",
       "required": True
     },
     {
@@ -131,11 +156,22 @@ bucketlist_put_dict = {
       "in": "formData",
       "type":"string",
       "required": True
+    },
+    {
+      "name":"Authorization",
+      "description":"Bearer <token>",
+      "in":"header",
+      "required": True,
+      "type": "string",
+
     }
   ],
   "responses": {
     "200": {
       "description": "Name of bucketlist with specified id is updated"
+    },
+    "401": {
+      "description": "Authorization header is missing"
     }
   }  
 }
@@ -146,12 +182,23 @@ bucketlist_delete_dict = {
       "name": "id",
       "in": "path",
       "type": "integer",
-      "required": True
+      "required": True,
+      "description":"Id of the bucketlist"
+    },
+    {
+      "name":"Authorization",
+      "description":"Bearer <token>",
+      "in":"header",
+      "required": True,
+      "type": "string"
     }
   ],
   "responses": {
     "200": {
       "description": "Bucketlist with specified id is deleted"
+    },
+    "401": {
+      "description": "Authorization header is missing"
     }
   }  
 }
@@ -162,7 +209,8 @@ items_get_dict = {
       "name": "id",
       "in": "path",
       "type":"string",
-      "required": True
+      "required": True,
+      "description":"Id of the bucketlist"
     },
     {
       "name": "query",
@@ -173,11 +221,25 @@ items_get_dict = {
       "name": "limit",
       "in":"query",
       "type":"string"
+    },
+    {
+      "name":"Authorization",
+      "description":"Bearer <token>",
+      "in":"header",
+      "required": True,
+      "type": "string",
+
     }
   ],
   "responses": {
     "200": {
       "description": "Get items in bucketlist"
+    },
+    "400":{
+      "description": "Bad request. Limit or query isn't defined"
+    },
+    "401": {
+      "description": "Authorization header is missing"
     }
   }  
 }
@@ -188,18 +250,31 @@ items_post_dict = {
       "name": "id",
       "in": "path",
       "type": "integer",
-      "required": True
+      "required": True,
+      "description":"Id of the bucketlist"
     },
     {
       "name": "description",
       "in": "formData",
+      "description":"Title of the item",
       "type":"string",
       "required": True
+    },
+    {
+      "name":"Authorization",
+      "description":"Bearer <token>",
+      "in":"header",
+      "required": True,
+      "type": "string",
+
     }
   ],
   "responses": {
     "201": {
       "description": "Create a new item"
+    },
+    "401": {
+      "description": "Authorization header is missing"
     }
   }  
 }
@@ -223,11 +298,22 @@ item_put_dict = {
       "in": "formData",
       "type":"string",
       "required": True
+    },
+    {
+      "name":"Authorization",
+      "description":"Bearer <token>",
+      "in":"header",
+      "required": True,
+      "type": "string",
+
     }
   ],
   "responses": {
     "200": {
       "description": "Item title is updated"
+    },
+    "401": {
+      "description": "Authorization header is missing"
     }
   }  
 }
@@ -244,11 +330,21 @@ item_delete_dict = {
       "in":"path",
       "type":"integer",
       "required": True
+    },
+    {
+      "name":"Authorization",
+      "description":"Bearer <token>",
+      "in":"header",
+      "required": True,
+      "type": "string"
     }
   ],
   "responses": {
     "200": {
       "description": "Item is deleted from bucketlist"
+    },
+    "401": {
+      "description": "Authorization header is missing"
     }
   }   
 }
