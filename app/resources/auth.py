@@ -6,6 +6,7 @@ from app.serializers.serializers import user_serializer
 parser = reqparse.RequestParser()
 from flasgger import swag_from
 from app.swagger_dicts import login_dict, register_dict, reset_dict
+from flask import g
 
 def get_user(username):
 	return User.query.filter_by(username=username).first()
@@ -54,6 +55,9 @@ class Login(Resource):
 		if user.authenticate_password(password):
 			#login the person
 			token = user.generate_token(user.id)
+			g.used_tokens = []
+			g.used_tokens.append(token)
+			print("g.used_tokens", g.used_tokens)
 			response = jsonify({"message": "Successfully logged in", "token": token.decode('UTF-8')})
 			response.status_code = 200
 			return response
