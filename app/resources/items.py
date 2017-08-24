@@ -24,7 +24,7 @@ class ItemsApi(Resource):
         limit = request.args.get('limit')
         if query:
             item = BucketlistItem.query.filter(BucketlistItem.description == query).first()
-            if item:
+            if item and item.owned_by == user_id and item.bucketlist_id == id:
                 response = jsonify({
                     'id': item.id,
                     'description': item.description,

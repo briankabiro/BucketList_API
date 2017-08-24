@@ -31,7 +31,7 @@ class BucketListsApi(Resource):
         
         if query:
             bucket = Bucketlist.query.filter(Bucketlist.name == query).first()
-            if bucket:
+            if bucket and bucket.owned_by == user_id:
                 return marshal(bucket, bucketlist_serializer), 200
             else:
                 abort(404, message="Bucketlist with name '{}' doesn't exist".format(query))
