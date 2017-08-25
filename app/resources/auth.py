@@ -56,9 +56,8 @@ class Login(Resource):
 		if user.authenticate_password(password):
 			#login the person
 			token = user.generate_token(user.id)
-			g.used_tokens = []
-			g.used_tokens.append(token)
-			print("g.used_tokens", g.used_tokens)
+			session['token'] = token
+			
 			response = jsonify({"message": "Successfully logged in", "token": token.decode('UTF-8')})
 			response.status_code = 200
 			return response
@@ -88,11 +87,11 @@ class ResetPassword(Resource):
 			response.status_code = 200
 			return response
 		else:
-			return {"message": "User doesn't exist"}
+			abort(404, message="User doesn't exist")
 
 
 class Logout(Resource):
-	
-	def post(self):
-		user = get_user(args['username'])
-		# delete token
+	@requires_auth
+	def post(self, user_id):
+		session['logged_out'] = True
+		return {"message" : "You have been logged out"}
