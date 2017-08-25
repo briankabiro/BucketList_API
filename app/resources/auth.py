@@ -70,7 +70,7 @@ class Login(Resource):
 class ResetPassword(Resource):
 	@swag_from(reset_dict)
 	def post(self):
-		# reset existing user's password
+		""" reset existing user's password """
 		parser.add_argument('username')
 		parser.add_argument('password')
 		args = parser.parse_args()	

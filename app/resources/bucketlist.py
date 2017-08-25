@@ -21,7 +21,6 @@ def abort_if_bucket_doesnt_exist(id, user_id):
 
 class BucketListsApi(Resource):
     #endpoint /bucketlists/
-    
     @requires_auth
     @swag_from(bucketlists_get_dict)
     def get(self, user_id):
