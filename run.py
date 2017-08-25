@@ -8,15 +8,16 @@ import os
 
 app = create_app(config_name='development')
 api = Api(app)
-# app.config['SWAGGER'] = {
-# 	'title': 'Bucketlist API'
-# }
+app.config['SWAGGER'] = {
+	'title': 'Bucketlist API'
+}
 Swagger(app)
 
 api.add_resource(BucketListApi, '/bucketlists/<id>')
 api.add_resource(BucketListsApi, '/bucketlists/')
 api.add_resource(Register, '/auth/register')
 api.add_resource(Login, '/auth/login')
+api.add_resource(Logout, '/auth/logout')
 api.add_resource(ResetPassword, '/auth/reset-password')
 api.add_resource(ItemsApi, '/bucketlists/<id>/items/')
 api.add_resource(ItemApi, '/bucketlists/<id>/items/<item_id>')
