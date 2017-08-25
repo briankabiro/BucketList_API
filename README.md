@@ -15,8 +15,8 @@ pip install -r requirements.txt
 ```
 5. Create a migrations folder ```python manage.py db init```
 6. Migrate the migrations ```python manage.py db migrate```
-7. ```python manage.py db update```
-. Start the app by running ```python run.py```
+7. Run ```python manage.py db update``` to update the database
+8. Start the app by running ```python run.py```
 
 
 ## Tests
