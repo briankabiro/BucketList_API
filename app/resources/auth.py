@@ -6,7 +6,8 @@ from app.serializers.serializers import user_serializer
 parser = reqparse.RequestParser()
 from flasgger import swag_from
 from app.swagger_dicts import login_dict, register_dict, reset_dict
-from flask import g
+from flask import session
+from app.resources.base import requires_auth
 
 def get_user(username):
 	return User.query.filter_by(username=username).first()
