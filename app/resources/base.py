@@ -18,7 +18,9 @@ def requires_auth(f):
 				abort(401)
 
 		try:
-			user_id_dict = jwt.decode(auth_token, current_app.config['SECRET_KEY'])
+			user_id_dict = jwt.decode(
+				auth_token,
+				current_app.config['SECRET_KEY'])
 			user_id = user_id_dict['id']
 		except jwt.ExpiredSignatureError:
 			return 'Signature Expired. Please log in again'
