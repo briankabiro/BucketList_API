@@ -16,6 +16,11 @@ pip install -r requirements.txt
 5. Create a migrations folder ```python manage.py db init```
 6. Migrate the migrations ```python manage.py db migrate```
 7. Run ```python manage.py db update``` to update the database
+8. Create a .env file in the root directory and add the following:
+	``` source myenv/bin/activate```
+	``` export SECRET_KEY="add-a-very-long-secret-key" ```
+	``` export DATABASE_URL="url to" ```
+	``` export TEST_DATABASE_URL="" ```
 8. Start the app by running ```python run.py```
 
 
