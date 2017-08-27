@@ -26,7 +26,7 @@ class Register(Resource):
 
 		if get_user(username) != None:
 			response = jsonify({"message": "User already exists"})
-			response.status_code = 303
+			response.status_code = 400
 			return response
 			
 		user = User(username=username, password=password)
@@ -47,10 +47,11 @@ class Login(Resource):
 		args = parser.parse_args()
 		username, password = args['username'], args['password']
 		user = get_user(username)
+		session['logged_out'] = False
 
 		if not user:
 			response =  jsonify({"message": "User doesn't exist"})
-			response.status_code = 401
+			response.status_code = 404
 			return response
 
 		if user.authenticate_password(password):

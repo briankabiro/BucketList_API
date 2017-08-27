@@ -105,4 +105,4 @@ class BucketListApi(Resource):
         abort_if_bucket_doesnt_exist(id, user_id)
         bucket = get_bucket(id, user_id)
         bucket.delete()
-        return {"message": "the bucketlist was deleted successfully"}
+        return make_response(jsonify({"message": "the bucketlist was deleted successfully"}), 200)

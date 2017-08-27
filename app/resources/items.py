@@ -25,16 +25,7 @@ class ItemsApi(Resource):
         if query:
             item = BucketlistItem.query.filter(BucketlistItem.description == query).first()
             if item and item.owned_by == user_id and item.bucketlist_id == id:
-                response = jsonify({
-                    'id': item.id,
-                    'description': item.description,
-                    'date_created': item.date_created,
-                    'date_modified': item.date_modified,
-                    'owned_by': item.owned_by,
-                    'bucketlist_id': item.bucketlist_id
-                })
-                response.status_code = 200
-                return response         
+                return marshal(item, bucketlist_item_serializer), 200
             else:
                 abort(404, message="Item with name '{}' doesn't exist".format(query))
 
@@ -47,23 +38,19 @@ class ItemsApi(Resource):
                 ).paginate(page, limit, error_out=False)
 
             print('this is the pagination object', dir(items))
-            print(items.items)
             results = []
             for item in items.items:
-                item_obj = {
-                    'id': item.id,
-                    'description': item.description,
-                    'date_created': item.date_created,
-                    'date_modified': item.date_modified,
-                    'owned_by': item.owned_by,
-                    'bucketlist_id': item.bucketlist_id
-                }
+                item_obj = marshal(item, bucketlist_item_serializer)
                 results.append(item_obj)
             response = jsonify(results)
             response.status_code = 200
             return response
 
-        return make_response(jsonify({"message" : "You need to specify the limit or the query parameters"}), 400)
+        return make_response(
+            jsonify(
+                {"message" :
+                "You need to specify the limit or the query parameters"}),
+            400)
         
     @requires_auth
     @swag_from(items_post_dict)
@@ -73,9 +60,12 @@ class ItemsApi(Resource):
         args = parser.parse_args()
         description = args['description']
         if not description or description.isspace():
-            return {"message": "The description of an item cannot be blank"}
+            return {
+            "message": "The description of an item cannot be blank"}
             
-        item = BucketlistItem(description=args['description'], bucketlist_id=id, owned_by=user_id)
+        item = BucketlistItem(
+            description=args['description'],
+            bucketlist_id=id, owned_by=user_id)
         item.save()
 
         return make_response(jsonify({
@@ -96,18 +86,29 @@ class ItemApi(Resource):
     @swag_from(item_put_dict)
     def put(self, user_id, id, item_id):
         """ update item in bucketlist """
-        parser.add_argument('description', required=True)
+        parser.add_argument('description')
+        parser.add_argument('is_done')
         args = parser.parse_args()
+        description, is_done = args['description'], args['is_done']
+        
+        if not description: #or description.isspace() or is_done.isspace()
+            return make_response(jsonify
+                ({"message": "You need to specify the description or isDone in the request"}),
+                400)
+        
         item = get_item(id, item_id)
         if not item:
             abort(404, message="Item {} doesn't exist".format(item_id))
         
-        description = args['description']
-        if not description or description.isspace():
-            return {"message": "The description of an item cannot be blank"}
-
-        item.description = description
-        item.save()
+        if description:
+            item.description = description
+            item.save()
+        
+        if is_done:
+            # add negative value of isDone
+            item.is_done = is_done
+            item.save()
+        
         return make_response(jsonify({"message": "Item updated successfully"}), 200)
 
     @requires_auth
