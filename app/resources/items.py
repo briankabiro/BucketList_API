@@ -1,9 +1,10 @@
-from flask_restful import Resource, abort, reqparse
+from flask_restful import Resource, abort, reqparse, marshal
 from flask import jsonify, make_response, request
 from app.models import BucketlistItem
 from app.resources.base import requires_auth
 parser = reqparse.RequestParser()
 from flasgger import swag_from
+from app.serializers.serializers import bucketlist_item_serializer
 from app.swagger_dicts import item_put_dict, item_delete_dict
 from app.swagger_dicts import items_get_dict, items_post_dict
 
