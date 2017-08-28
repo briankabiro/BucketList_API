@@ -81,6 +81,17 @@ class TestBuckets(TestBase):
 		)
 		data = json.loads(response.data)
 		self.assertEqual(len(data), 5)
+
+	def test_pagination_with_several_pages(self):
+		for i in range(1, 6):
+			self.create_bucket(self.token)
+
+		response = self.client.get(
+			'/bucketlists/?limit=3&page=2',
+			headers=self.headers
+		)
+		data = json.loads(response.data)
+		self.assertEqual(len(data), 2)
 	
 	def test_search_functionality_on_bucketlists(self):
 		self.create_bucket(self.token)

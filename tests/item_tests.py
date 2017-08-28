@@ -8,7 +8,7 @@ class TestItems(TestBase):
         response = self.create_bucket(self.token)
         rv = self.create_item(self.token)
         data = json.loads(rv.data)
-        self.assertIn('go to zanzibar', str(rv.data))
+        self.assertIn('sleep', str(rv.data))
 
     def test_item_is_updated(self):
         # test to check item is updated
@@ -39,9 +39,9 @@ class TestItems(TestBase):
         self.create_bucket(self.token)
         self.create_item(self.token)
         response = self.client.get(
-            '/bucketlists/1/items/?q=go to zanzibar', headers=self.headers)
+            '/bucketlists/1/items/?q=sleep', headers=self.headers)
         data = json.loads(response.data)
-        self.assertIn('go to zanzibar', str(data))
+        self.assertIn('sleep', str(data))
 
     def test_pagination_when_getting_items(self):
         # test to check pagination when getting items
@@ -54,3 +54,14 @@ class TestItems(TestBase):
 
         data = json.loads(response.data)
         self.assertEqual(len(data), 5)
+
+    def test_pagination_with_multiple_pages(self):
+        self.create_bucket(self.token)
+        for i in range(1, 6):
+            self.create_item(self.token)
+
+        response = self.client.get(
+            '/bucketlists/1/items/?limit=3&page=2', headers=self.headers)
+
+        data = json.loads(response.data)
+        self.assertEqual(len(data), 2) 

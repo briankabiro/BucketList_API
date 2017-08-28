@@ -63,8 +63,8 @@ class TestBase(unittest.TestCase):
 		self.bucket = {'name': 'Hiking'}
 		self.bucket1 = {'name': 'Under 30'}
 		self.test_user = {'username':'loki', 'password': 'pwd12345'}
-		self.item = {'description':'go to zanzibar'}
-		self.item1 = {'description':'work on house'}
+		self.item = {'description': 'sleep'}
+		self.item1 = {'description':'produce'}
 
 		# init config
 		self.register_user()
