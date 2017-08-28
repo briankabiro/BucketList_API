@@ -101,6 +101,25 @@ class TestBuckets(TestBase):
 		)
 		self.assertIn('Hiking', str(response.data))
 
+	def test_when_limit_is_not_integer(self):
+		for i in range(1, 6):
+			self.create_bucket(self.token)
 
+		response = self.client.get(
+			'/bucketlists/?limit=a',
+			headers=self.headers
+		)
+		self.assertEqual(response.status_code, 400)
+
+	def test_when_page_is_not_integer(self):
+		for i in range(1, 6):
+			self.create_bucket(self.token)
+
+		response = self.client.get(
+			'/bucketlists/?limit=1&page=s',
+			headers=self.headers
+		)
+		self.assertEqual(response.status_code, 400)
+		
 if __name__ == '__main__':
 	unittest.main()

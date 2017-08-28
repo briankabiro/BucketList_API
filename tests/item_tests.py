@@ -65,3 +65,17 @@ class TestItems(TestBase):
 
         data = json.loads(response.data)
         self.assertEqual(len(data), 2) 
+
+    def test_when_limit_is_not_integer(self):
+        self.create_bucket(self.token)
+        self.create_item(self.token)
+
+        response = self.client.get('/bucketlists/1/items/?limit=a', headers=self.headers)
+        self.assertEqual(response.status_code, 400)
+
+    def test_when_page_is_not_integer(self):
+        self.create_bucket(self.token)
+        self.create_item(self.token)
+
+        response = self.client.get('/bucketlists/1/items/?limit=1&page=a', headers=self.headers)
+        self.assertEqual(response.status_code, 400)
