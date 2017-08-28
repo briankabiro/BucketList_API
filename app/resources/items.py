@@ -1,6 +1,6 @@
 from flask_restful import Resource, abort, reqparse, marshal
 from flask import jsonify, make_response, request
-from app.models import BucketlistItem
+from app.models import BucketlistItem, Bucketlist
 from app.resources.base import requires_auth
 parser = reqparse.RequestParser()
 from flasgger import swag_from
@@ -8,6 +8,9 @@ from app.serializers.serializers import bucketlist_item_serializer
 from app.swagger_dicts import item_put_dict, item_delete_dict
 from app.swagger_dicts import items_get_dict, items_post_dict
 
+def get_bucket(id, user_id):
+    # Return the bucket from db using id
+    return Bucketlist.query.filter_by(id=id, owned_by=user_id).first()
 
 def get_item(id, item_id):
     return BucketlistItem.query.filter_by(id=item_id, bucketlist_id=id).first()
