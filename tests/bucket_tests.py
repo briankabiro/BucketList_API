@@ -13,7 +13,6 @@ class TestBuckets(TestBase):
 			'/bucketlists/', 
 			headers=self.headers)
 		buckets = json.loads(response.data)
-		print(buckets)
 		self.assertEqual(len(buckets), 1)
 
 
