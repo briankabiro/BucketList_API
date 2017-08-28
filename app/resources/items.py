@@ -116,23 +116,23 @@ class ItemApi(Resource):
         args = parser.parse_args()
         description, is_done = args['description'], args['is_done']
         
-        if not description: #or description.isspace() or is_done.isspace()
-            return make_response(jsonify
-                ({"message": "You need to specify the description or isDone in the request"}),
-                400)
-        
+        if get_bucket(id, user_id) == None:
+            abort(404, message="Bucketlist {} doesn't exist".format(id))
+
         item = get_item(id, item_id)
         if not item:
             abort(404, message="Item {} doesn't exist".format(item_id))
         
-        if description:
+        if description and not description.isspace():
             item.description = description
+            item.save()  
+        elif is_done and not is_done.isspace():
+            item.is_done = not(item.is_done)
             item.save()
-        
-        if is_done:
-            # add negative value of isDone
-            item.is_done = is_done
-            item.save()
+        else:
+            return make_response(jsonify
+                ({"message": "You need to specify the description or is_done in the request"}),
+                400)
         
         return make_response(jsonify({"message": "Item updated successfully"}), 200)
 
