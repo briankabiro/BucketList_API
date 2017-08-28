@@ -1,13 +1,13 @@
+import os
 from app import create_app
 from app.resources.items import ItemApi, ItemsApi
 from app.resources.bucketlist import BucketListApi, BucketListsApi
 from app.resources.auth import Register, Login, ResetPassword, Logout
 from flask_restful import Api
 from flasgger import Swagger
-import os
 
 app = create_app(config_name='development')
-api = Api(app)
+api = Api(app, catch_all_404s=True)
 app.config['SWAGGER'] = {
 	'title': 'Bucketlist API'
 }

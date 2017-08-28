@@ -21,24 +21,42 @@ class ItemsApi(Resource):
     @swag_from(items_get_dict)
     def get(self, user_id, id):
         """ Return items depending on limit and query """
-        query = request.args.get('q')
+        q = request.args.get('q')
         limit = request.args.get('limit')
-        if query:
-            item = BucketlistItem.query.filter(BucketlistItem.description == query).first()
-            if item and item.owned_by == user_id and item.bucketlist_id == id:
-                return marshal(item, bucketlist_item_serializer), 200
+        page = request.args.get('page')
+        
+        if q:
+            items = BucketlistItem.query.filter(BucketlistItem.description.like(q)).all()
+            results = []
+            if items:
+                for item in items:
+                    if item.bucketlist_id == int(id):
+                        item_obj = marshal(item, bucketlist_item_serializer)
+                        results.append(item_obj)
+                response = jsonify(results)
+                response.status_code = 200
+                return response     
             else:
                 abort(404, message="Item with name '{}' doesn't exist".format(query))
 
         if limit:
-            limit = int(limit)
-            page = 1
+            try:
+                limit = int(limit)
+            except:
+                return make_response(jsonify({"message": "limit needs to be an integer"}), 400)           
+            if not page: 
+                page = 1
+            else:
+                try:
+                    page = int(page)
+                except:
+                    return make_response(jsonify({"message": "page needs to be an integer"}), 400)
+                    
             items = BucketlistItem.query.filter_by(
                 owned_by=user_id, 
                 bucketlist_id=id
                 ).paginate(page, limit, error_out=False)
 
-            print('this is the pagination object', dir(items))
             results = []
             for item in items.items:
                 item_obj = marshal(item, bucketlist_item_serializer)
@@ -63,7 +81,10 @@ class ItemsApi(Resource):
         if not description or description.isspace():
             return {
             "message": "The description of an item cannot be blank"}
-            
+
+        if get_bucket(id, user_id) == None:
+            abort(404, message="Bucketlist {} doesn't exist".format(id))
+        
         item = BucketlistItem(
             description=args['description'],
             bucketlist_id=id, owned_by=user_id)
@@ -116,6 +137,9 @@ class ItemApi(Resource):
     @swag_from(item_delete_dict)
     def delete(self, user_id, id, item_id):
         """ delete item from bucketlist """
+        if get_bucket(id, user_id) == None:
+            abort(404, message="Bucketlist {} doesn't exist".format(id))
+
         item = get_item(id, item_id)
         if not item:
             abort(404, message="Item {} doesn't exist".format(item_id))
