@@ -16,9 +16,13 @@ class TestItems(TestBase):
         self.create_item(self.token)
 
         rv = self.client.put(
-            '/bucketlists/1/items/1', headers=self.headers, data=self.item1)
+            '/bucketlists/1/items/1',
+            headers=self.headers,
+            data=self.item1)
         data = json.loads(rv.data)
-        self.assertIn("updated successfully", rv.data.decode())
+        self.assertIn(
+            "updated successfully",
+            rv.data.decode())
         self.assertEqual(rv.status_code, 200)
 
     def test_item_is_deleted(self):
@@ -26,7 +30,9 @@ class TestItems(TestBase):
         self.create_bucket(self.token)
         self.create_item(self.token)
 
-        self.client.delete('/bucketlists/1/items/1', headers=self.headers)
+        self.client.delete(
+            '/bucketlists/1/items/1',
+            headers=self.headers)
 
         response = self.client.get(
             '/bucketlists/1', headers=self.headers)
@@ -39,7 +45,8 @@ class TestItems(TestBase):
         self.create_bucket(self.token)
         self.create_item(self.token)
         response = self.client.get(
-            '/bucketlists/1/items/?q=sleep', headers=self.headers)
+            '/bucketlists/1/items/?q=sleep',
+            headers=self.headers)
         data = json.loads(response.data)
         self.assertIn('sleep', str(data))
 
@@ -50,7 +57,8 @@ class TestItems(TestBase):
             self.create_item(self.token)
 
         response = self.client.get(
-            '/bucketlists/1/items/?limit=5', headers=self.headers)
+            '/bucketlists/1/items/?limit=5',
+            headers=self.headers)
 
         data = json.loads(response.data)
         self.assertEqual(len(data), 5)
@@ -61,7 +69,8 @@ class TestItems(TestBase):
             self.create_item(self.token)
 
         response = self.client.get(
-            '/bucketlists/1/items/?limit=3&page=2', headers=self.headers)
+            '/bucketlists/1/items/?limit=3&page=2',
+            headers=self.headers)
 
         data = json.loads(response.data)
         self.assertEqual(len(data), 2) 
@@ -70,12 +79,16 @@ class TestItems(TestBase):
         self.create_bucket(self.token)
         self.create_item(self.token)
 
-        response = self.client.get('/bucketlists/1/items/?limit=a', headers=self.headers)
+        response = self.client.get(
+            '/bucketlists/1/items/?limit=a',
+            headers=self.headers)
         self.assertEqual(response.status_code, 400)
 
     def test_when_page_is_not_integer(self):
         self.create_bucket(self.token)
         self.create_item(self.token)
 
-        response = self.client.get('/bucketlists/1/items/?limit=1&page=a', headers=self.headers)
+        response = self.client.get(
+            '/bucketlists/1/items/?limit=1&page=a',
+            headers=self.headers)
         self.assertEqual(response.status_code, 400)
