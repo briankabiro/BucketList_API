@@ -32,7 +32,7 @@ class BucketListsApi(Resource):
         page = request.args.get('page')
         
         if q:
-            buckets = Bucketlist.query.filter(Bucketlist.name.like(q)).all()
+            buckets = Bucketlist.query.filter(Bucketlist.name.contains(q)).all()
             results = []
             if buckets:
                 for bucket in buckets:

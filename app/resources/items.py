@@ -29,7 +29,7 @@ class ItemsApi(Resource):
         page = request.args.get('page')
         
         if q:
-            items = BucketlistItem.query.filter(BucketlistItem.description.like(q)).all()
+            items = BucketlistItem.query.filter(BucketlistItem.description.contains(q)).all()
             results = []
             if items:
                 for item in items:
