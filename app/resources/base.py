@@ -1,8 +1,8 @@
 from flask_restful import abort
 import jwt
-from flask import request, current_app, json
+from flask import request, current_app, json, make_response
 from functools import wraps
-from flask import session
+from flask import session, jsonify
 
 def requires_auth(f):
 	@wraps(f)
@@ -10,12 +10,18 @@ def requires_auth(f):
 		# check if token exists
 		auth_header = request.headers.get('Authorization')
 		if not auth_header:
-			abort(401)		
-		auth_token = auth_header.split(" ")[1]
+			abort(401)
+
+		try:
+			auth_token = auth_header.split(" ")[1]
+			
+		except:
+			return make_response(
+				jsonify({"message": "Invalid Header format"}), 400)
 		
-		if auth_token == session['token'].decode() and 'logged_out' in session:
-			if session['logged_out']:
-				abort(401)
+		# if auth_token == session['token'].decode() and 'logged_out' in session:
+		# 	if session['logged_out']:
+		# 		abort(401)
 
 		try:
 			user_id_dict = jwt.decode(
