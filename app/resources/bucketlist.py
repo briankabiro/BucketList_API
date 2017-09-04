@@ -52,14 +52,16 @@ class BucketListsApi(Resource):
             try:
                 limit = int(limit)
             except:
-                return make_response(jsonify({"message": "limit needs to be an integer"}), 400)           
+                return make_response(
+                    jsonify({"message": "limit needs to be an integer"}), 400)           
             if not page: 
                 page = 1
             else:
                 try:
                     page = int(page)
                 except:
-                    return make_response(jsonify({"message": "page needs to be an integer"}), 400) 
+                    return make_response(
+                        jsonify({"message": "page needs to be an integer"}), 400) 
                                          
             buckets = Bucketlist.query.filter_by(owned_by=user_id).paginate(
                 page, limit, error_out=False)
