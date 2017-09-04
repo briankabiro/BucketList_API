@@ -32,7 +32,8 @@ class BucketListsApi(Resource):
         page = request.args.get('page')
         
         if q:
-            buckets = Bucketlist.query.filter(Bucketlist.name.contains(q)).all()
+            buckets = Bucketlist.query.filter(
+                Bucketlist.name.contains(q)).all()
             results = []
             if buckets:
                 for bucket in buckets:
@@ -66,7 +67,9 @@ class BucketListsApi(Resource):
             buckets = Bucketlist.query.filter_by(owned_by=user_id).paginate(
                 page, limit, error_out=False)
             if not buckets.items:
-                return make_response(jsonify({"message": "You have reached the last page"}), 404)
+                return make_response(jsonify({
+                    "message": "You have reached the last page"}),
+                    404)
             results = []
             for bucket in buckets.items:
                 bucket_obj = marshal(bucket, bucketlist_serializer)
@@ -93,7 +96,8 @@ class BucketListsApi(Resource):
         name = args['name']
 
         if not name or name.isspace():
-            return {"message": "Name of Bucketlist cannot be blank"}
+            return {"message":
+                "Name of Bucketlist cannot be blank"}
         bucket = Bucketlist(name=name, owned_by=user_id)
         bucket.save()
         # return the created bucketlist
@@ -119,7 +123,8 @@ class BucketListApi(Resource):
         name = args['name']
         abort_if_bucket_doesnt_exist(id, user_id)
         if not name or name.isspace():
-            return {"message": "Name of Bucketlist cannot be blank"}
+            return {"message":
+                "Name of Bucketlist cannot be blank"}
         bucket = get_bucket(id, user_id)
         bucket.name = args['name']
         bucket.save()

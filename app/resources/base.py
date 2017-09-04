@@ -19,10 +19,6 @@ def requires_auth(f):
 			return make_response(
 				jsonify({"message": "Invalid Header format"}), 400)
 		
-		# if auth_token == session['token'].decode() and 'logged_out' in session:
-		# 	if session['logged_out']:
-		# 		abort(401)
-
 		try:
 			user_id_dict = jwt.decode(
 				auth_token,

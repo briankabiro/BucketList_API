@@ -46,14 +46,18 @@ class ItemsApi(Resource):
             try:
                 limit = int(limit)
             except:
-                return make_response(jsonify({"message": "limit needs to be an integer"}), 400)           
+                return make_response(jsonify(
+                    {"message": "limit needs to be an integer"}),
+                400)           
             if not page: 
                 page = 1
             else:
                 try:
                     page = int(page)
                 except:
-                    return make_response(jsonify({"message": "page needs to be an integer"}), 400)
+                    return make_response(jsonify(
+                        {"message": "page needs to be an integer"}),
+                    400)
                     
             items = BucketlistItem.query.filter_by(
                 owned_by=user_id, 
@@ -131,7 +135,8 @@ class ItemApi(Resource):
             item.save()
         else:
             return make_response(jsonify
-                ({"message": "You need to specify the description or is_done in the request"}),
+                ({"message": 
+                    "You need to specify the description or is_done in the request"}),
                 400)
         
         return make_response(jsonify({"message": "Item updated successfully"}), 200)
