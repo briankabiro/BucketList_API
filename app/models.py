@@ -108,7 +108,7 @@ class BucketlistItem(db.Model):
     __tablename__ = "bucketlist_items"
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text)
-    is_done = db.Column(db.Boolean, default=False)
+    done = db.Column(db.Boolean, default=False)
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
     date_modified = db.Column(
         db.DateTime,

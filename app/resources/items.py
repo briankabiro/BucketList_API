@@ -116,10 +116,9 @@ class ItemApi(Resource):
     def put(self, user_id, id, item_id):
         """ update item in bucketlist """
         parser.add_argument('description')
-        parser.add_argument('is_done')
+        parser.add_argument('done')
         args = parser.parse_args()
-        description, is_done = args['description'], args['is_done']
-        
+        description, done = args['description'], args['done']
         if get_bucket(id, user_id) == None:
             abort(404, message="Bucketlist {} doesn't exist".format(id))
 
@@ -129,9 +128,9 @@ class ItemApi(Resource):
         
         if description and not description.isspace():
             item.description = description
-            item.save()  
-        elif is_done and not is_done.isspace():
-            item.is_done = not(item.is_done)
+            item.save()
+        elif done and not done.isspace():
+            item.done = not(item.done)
             item.save()
         else:
             return make_response(jsonify
