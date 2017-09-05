@@ -50,14 +50,4 @@ class TestAuth(AuthTestBase):
 		rv = self.client.get('/bucketlists/')
 		self.assertEqual(rv.status_code, 401)
 	
-	def test_logout(self):
-		# test post request for logout endpoint
-		self.client.post('/auth/register', data=self.test_user)
-		rv =self.client.post('/auth/login', data=self.test_user)
-		token = json.loads(rv.data.decode())['token']
-		response = self.client.post('/auth/logout', headers=dict(Authorization="Bearer " + token))
-		data = json.loads(response.data)
-		self.assertIn("You have been logged out", data['message'])
-		rv1 = self.client.get('/bucketlists/', headers=dict(Authorization="Bearer " + token))
-		self.assertEqual(rv1.status_code, 401)
 	
