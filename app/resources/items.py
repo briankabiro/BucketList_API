@@ -100,8 +100,6 @@ class ItemsApi(Resource):
         return make_response(jsonify({
             'id': item.id,
             'description': item.description,
-            'date_created': item.date_created,
-            'date_modified': item.date_modified,
             'bucketlist_id': item.bucketlist_id,
             'owned_by': item.owned_by
         }), 201)
