@@ -73,10 +73,10 @@ class ItemsApi(Resource):
             return response
 
         return make_response(
-            jsonify(
-                {"message" :
-                "You need to specify the limit or the query parameters"}),
-            400)
+            jsonify({
+                "message" :
+                    "You need to specify the limit or the query parameters"}),
+                400)
         
     @requires_auth
     @swag_from(items_post_dict)
