@@ -127,13 +127,25 @@ class ItemApi(Resource):
         if description and not description.isspace():
             item.description = description
             item.save()
+        
         elif done and not done.isspace():
-            item.done = not(item.done)
+            
+            if done == "true":
+                item.done = True
+            elif done == "false":
+                item.done == False
+            else:
+                return make_response(
+                    jsonify(
+                        {"message": "Done should be passed as a boolean value (true or false)"}
+                        ), 400
+                    )
             item.save()
+
         else:
             return make_response(jsonify
                 ({"message": 
-                    "You need to specify the description or is_done in the request"}),
+                    "You need to specify the description or done in the request"}),
                 400)
         
         return make_response(jsonify({"message": "Item updated successfully"}), 200)

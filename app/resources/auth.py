@@ -25,10 +25,12 @@ class Register(Resource):
 
         if not username or not password or username.isspace(
         ) or password.isspace():
-            return {"message": "Username or Password cannot be blank"}
+            response = jsonify({"message": "Username or Password cannot be blank"})
+            response.status_code = 400
+            return response
 
         if get_user(username) != None:
-            response = jsonify({"message": "User already exists"})
+            response = jsonify({"message": "Username has been taken"})
             response.status_code = 400
             return response
 
