@@ -19,7 +19,6 @@ class TestItems(TestBase):
             '/bucketlists/1/items/1',
             headers=self.headers,
             data=self.item1)
-        data = json.loads(rv.data)
         self.assertIn(
             "updated successfully",
             rv.data.decode())
@@ -91,3 +90,54 @@ class TestItems(TestBase):
             '/bucketlists/1/items/?limit=1&page=a',
             headers=self.headers)
         self.assertEqual(response.status_code, 400)
+
+    def test_update_done_value(self):
+        self.create_bucket(self.token)
+        self.create_item(self.token)
+        rv = self.client.put(
+            '/bucketlists/1/items/1',
+            headers=self.headers,
+            data={"done": "true"})
+
+        self.assertIn(
+            "updated successfully",
+            rv.data.decode())
+        self.assertEqual(rv.status_code, 200)
+
+    def test_done_is_either_true_or_false(self):
+        self.create_bucket(self.token)
+        self.create_item(self.token)
+        rv = self.client.put(
+            '/bucketlists/1/items/1',
+            headers=self.headers,
+            data={"done": "t"})
+
+        self.assertEqual(rv.status_code, 400)
+
+    def test_either_done_or_description_is_required(self):
+        self.create_bucket(self.token)
+        self.create_item(self.token)
+        rv = self.client.put(
+            '/bucketlists/1/items/1',
+            headers=self.headers)
+
+        self.assertEqual(rv.status_code, 400)
+
+    def test_it_validates_bucketlist_id_when_updating(self):
+        self.create_bucket(self.token)
+        self.create_item(self.token)
+        rv = self.client.put(
+            '/bucketlists/2/items/1',
+            headers=self.headers,
+            data=self.item)
+        self.assertEqual(rv.status_code, 404)
+
+    def test_it_validates_item_id_when_updating(self):
+        self.create_bucket(self.token)
+        self.create_item(self.token)
+        rv = self.client.put(
+            '/bucketlists/1/items/2',
+            headers=self.headers,
+            data=self.item)
+        self.assertEqual(rv.status_code, 404)
+
