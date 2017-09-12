@@ -1,17 +1,17 @@
-from tests import TestBase
 import json
+from tests import TestBase
+
 
 class TestItems(TestBase):
 
     def test_item_is_created(self):
         # test to check item is created
-        response = self.create_bucket(self.token)
+        self.create_bucket(self.token)
         rv = self.create_item(self.token)
-        data = json.loads(rv.data)
         self.assertIn('sleep', str(rv.data))
 
     def test_item_is_updated(self):
-        # test to check item is updated
+        """ test to check item is updated """
         self.create_bucket(self.token)
         self.create_item(self.token)
 
@@ -71,9 +71,8 @@ class TestItems(TestBase):
         response = self.client.get(
             '/bucketlists/1/items/?limit=3&page=2',
             headers=self.headers)
-
         data = json.loads(response.data)
-        self.assertEqual(len(data), 2) 
+        self.assertEqual(len(data), 2)
 
     def test_when_limit_is_not_integer(self):
         self.create_bucket(self.token)

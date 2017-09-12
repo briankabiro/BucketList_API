@@ -123,8 +123,10 @@ class BucketListApi(Resource):
         name = args['name']
         abort_if_bucket_doesnt_exist(id, user_id)
         if not name or name.isspace():
-            return {"message":
-                "Name of Bucketlist cannot be blank"}
+            return {
+                "message":
+                    "Name of Bucketlist cannot be blank"
+                }
         bucket = get_bucket(id, user_id)
         bucket.name = args['name']
         bucket.save()

@@ -13,7 +13,9 @@ class TestAuth(AuthTestBase):
 
 
 	def test_null_values(self):
-		rv = self.client.post('/auth/register', data={'username':'', 'password':''})
+		rv = self.client.post(
+			'/auth/register',
+			data={'username':'', 'password':''})
 		data = json.loads(rv.data)
 		self.assertIn("blank", data['message'])
 
@@ -30,7 +32,9 @@ class TestAuth(AuthTestBase):
 
 	def test_invalid_username(self):
 		self.client.post('/auth/register', data=self.test_user)
-		response = self.client.post('/auth/login', data={'username': 'lee', 'password': '23233'})
+		response = self.client.post(
+			'/auth/login', 
+			data={'username': 'lee', 'password': '23233'})
 		self.assertEqual(response.status_code, 404)
 		
 	def test_invalid_password(self):

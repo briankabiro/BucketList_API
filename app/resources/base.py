@@ -30,4 +30,5 @@ def requires_auth(f):
 			return 'Invalid token. please login again'
 
 		return f(*args, user_id, **kwargs)
+
 	return decorated

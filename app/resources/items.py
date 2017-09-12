@@ -38,17 +38,19 @@ class ItemsApi(Resource):
                         results.append(item_obj)
                 response = jsonify(results)
                 response.status_code = 200
-                return response     
+                return response
             else:
-                abort(404, message="Item with name '{}' doesn't exist".format(query))
+                abort(
+                    404, message="Item with name '{}' doesn't exist".format(q)
+                    )
 
         if limit:
             try:
                 limit = int(limit)
             except:
-                return make_response(jsonify(
-                    {"message": "limit needs to be an integer"}),
-                400)           
+                return make_response(jsonify({
+                    "message": "limit needs to be an integer"}),
+                    400)       
             if not page: 
                 page = 1
             else:
@@ -57,7 +59,7 @@ class ItemsApi(Resource):
                 except:
                     return make_response(jsonify(
                         {"message": "page needs to be an integer"}),
-                    400)
+                        400)
                     
             items = BucketlistItem.query.filter_by(
                 owned_by=user_id, 
@@ -74,10 +76,10 @@ class ItemsApi(Resource):
 
         return make_response(
             jsonify({
-                "message" :
+                "message":
                     "You need to specify the limit or the query parameters"}),
                 400)
-        
+
     @requires_auth
     @swag_from(items_post_dict)
     def post(self, user_id, id):
@@ -87,9 +89,10 @@ class ItemsApi(Resource):
         description = args['description']
         if not description or description.isspace():
             return {
-            "message": "The description of an item cannot be blank"}
+                "message": "The description of an item cannot be blank"
+            }
 
-        if get_bucket(id, user_id) == None:
+        if get_bucket(id, user_id) is None:
             abort(404, message="Bucketlist {} doesn't exist".format(id))
         
         item = BucketlistItem(
@@ -117,7 +120,8 @@ class ItemApi(Resource):
         parser.add_argument('done')
         args = parser.parse_args()
         description, done = args['description'], args['done']
-        if get_bucket(id, user_id) == None:
+        
+        if get_bucket(id, user_id) is None:
             abort(404, message="Bucketlist {} doesn't exist".format(id))
 
         item = get_item(id, item_id)
