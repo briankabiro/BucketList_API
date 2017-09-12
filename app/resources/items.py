@@ -137,28 +137,30 @@ class ItemApi(Resource):
             if done == "true":
                 item.done = True
             elif done == "false":
-                item.done == False
+                item.done = False
             else:
                 return make_response(
-                    jsonify(
-                        {"message": "Done should be passed as a boolean value (true or false)"}
-                        ), 400
+                    jsonify({
+                        "message":
+                            "Done should be passed as a boolean value (true or false)"
+                        }), 400
                     )
             item.save()
 
         else:
-            return make_response(jsonify
-                ({"message": 
+            return make_response(jsonify({
+                "message":
                     "You need to specify the description or done in the request"}),
                 400)
         
-        return make_response(jsonify({"message": "Item updated successfully"}), 200)
+        return make_response(jsonify
+            ({"message": "Item updated successfully"}), 200)
 
     @requires_auth
     @swag_from(item_delete_dict)
     def delete(self, user_id, id, item_id):
         """ delete item from bucketlist """
-        if get_bucket(id, user_id) == None:
+        if get_bucket(id, user_id) is None:
             abort(404, message="Bucketlist {} doesn't exist".format(id))
 
         item = get_item(id, item_id)
