@@ -4,12 +4,14 @@ register_dict = {
     {
       "name": "username",
       "in": "formData",
+      "description": "Username",
       "type": "string",
       "required": True
     },
     {
       "name":"password",
       "in":"formData",
+      "description":"Password",
       "type": "string",
       "required":True
     }
@@ -26,12 +28,14 @@ login_dict = {
     {
       "name": "username",
       "in": "formData",
+      "description": "Username of user",
       "type": "string",
       "required": True
     },
     {
       "name":"password",
       "in":"formData",
+      "description": "Password of user",
       "type": "string",
       "required":True
     }
@@ -56,11 +60,21 @@ reset_dict = {
       "in": "formData",
       "type": "string",
       "required": True
+    },
+    {
+      "name": "New Password",
+      "in": "formData",
+      "type": "string",
+      "required": True,
+      "description": "New password"     
     }
   ],
   "responses": {
     "200": {
       "description": "Password has been changed"
+    },
+    "404": {
+      "description": "User doesn't exist"
     }
   }
 }
@@ -155,7 +169,8 @@ bucketlist_put_dict = {
       "name": "name",
       "in": "formData",
       "type":"string",
-      "required": True
+      "required": True,
+      "description":"Name of the bucketlist"
     },
     {
       "name":"Authorization",
@@ -297,7 +312,8 @@ item_put_dict = {
       "name": "description",
       "in": "formData",
       "type":"string",
-      "required": True
+      "required": True,
+      "description":"Title of the Item"
     },
     {
       "name":"Authorization",

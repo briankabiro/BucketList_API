@@ -2,6 +2,7 @@
 omit =
 	*/myenv/*
 	*/tests/*
+	*/app/swagger_dicts.py/*
     */instance/*
     */python?.?/*
     */python?.?-dev/*

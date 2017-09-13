@@ -17,6 +17,7 @@ class AuthTestBase(unittest.TestCase):
 		api.add_resource(BucketListsApi, '/bucketlists/')
 		api.add_resource(Register, '/auth/register')
 		api.add_resource(Login, '/auth/login')
+		api.add_resource(Logout, '/auth/logout')
 		api.add_resource(ResetPassword, '/auth/reset-password')
 		api.add_resource(ItemsApi, '/bucketlists/<id>/items/')
 		api.add_resource(ItemApi, '/bucketlists/<id>/items/<item_id>')
@@ -62,8 +63,8 @@ class TestBase(unittest.TestCase):
 		self.bucket = {'name': 'Hiking'}
 		self.bucket1 = {'name': 'Under 30'}
 		self.test_user = {'username':'loki', 'password': 'pwd12345'}
-		self.item = {'description':'go to zanzibar'}
-		self.item1 = {'description':'work on house'}
+		self.item = {'description': 'sleep'}
+		self.item1 = {'description':'produce'}
 
 		# init config
 		self.register_user()

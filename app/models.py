@@ -1,9 +1,10 @@
 import os
-import jwt
 import datetime
+import jwt
 from app import db
 from sqlalchemy.ext.hybrid import hybrid_property
 from werkzeug.security import generate_password_hash, check_password_hash
+
 
 class User(db.Model):
     """
@@ -19,23 +20,29 @@ class User(db.Model):
     password = db.Column(db.String())
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
     bucketlists = db.relationship('Bucketlist', order_by='Bucketlist.id')
-    
+
     def __init__(self, username, password):
         self.username = username
         self.password = generate_password_hash(password)
-    
+
     def authenticate_password(self, password):
         # check if passwords match
         return check_password_hash(self.password, password)
 
     def generate_token(self, id):
         # generate token on authentication
-        return jwt.encode({'id': id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, os.getenv('SECRET_KEY'))
+        return jwt.encode(
+            {
+                'id': id,
+                'exp':
+                datetime.datetime.utcnow() + datetime.timedelta(minutes=60)
+            },
+            os.getenv('SECRET_KEY'))
 
     def reset_password(self, new_password):
         # reset password
         self.password = generate_password_hash(new_password)
-    
+
     def save(self):
         # save a user to the db
         db.session.add(self)
@@ -66,10 +73,11 @@ class Bucketlist(db.Model):
         db.DateTime,
         default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
-    
+
     owned_by = db.Column(db.Integer, db.ForeignKey('users.id'))
-    items = db.relationship("BucketlistItem", backref=db.backref("bucketlists"))
-    
+    items = db.relationship(
+        "BucketlistItem", backref=db.backref("bucketlists"))
+
     def save(self):
         # save a bucket to the table
         db.session.add(self)
@@ -100,13 +108,13 @@ class BucketlistItem(db.Model):
     __tablename__ = "bucketlist_items"
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text)
-    is_done = db.Column(db.Boolean, default=False)
+    done = db.Column(db.Boolean, default=False)
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
     date_modified = db.Column(
         db.DateTime,
         default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
-    
+
     owned_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     bucketlist_id = db.Column(db.Integer, db.ForeignKey('bucketlists.id'))
 
@@ -117,7 +125,8 @@ class BucketlistItem(db.Model):
 
     def get_all(user_id, bucketlist_id):
         # return all the items that belong to user's bucketlist
-        return BucketlistItem.query.all(owned_by=user_id, bucketlist_id=bucketlist_id)
+        return BucketlistItem.query.all(
+            owned_by=user_id, bucketlist_id=bucketlist_id)
 
     def delete(self):
         # delete an item from the table
