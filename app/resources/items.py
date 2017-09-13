@@ -26,10 +26,10 @@ class ItemsApi(Resource):
         """ Return items depending on limit and query """
         q = request.args.get('q')
         limit = request.args.get('limit')
-        page = request.args.get('page')
-        
+        page = request.args.get('page')    
         if q:
-            items = BucketlistItem.query.filter(BucketlistItem.description.contains(q)).all()
+            items = BucketlistItem.query.filter(
+                BucketlistItem.description.contains(q)).all()
             results = []
             if items:
                 for item in items:
