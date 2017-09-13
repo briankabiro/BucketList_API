@@ -91,19 +91,6 @@ class TestItems(TestBase):
             headers=self.headers)
         self.assertEqual(response.status_code, 400)
 
-    def test_update_done_value(self):
-        self.create_bucket(self.token)
-        self.create_item(self.token)
-        rv = self.client.put(
-            '/bucketlists/1/items/1',
-            headers=self.headers,
-            data={"done": "true"})
-
-        self.assertIn(
-            "updated successfully",
-            rv.data.decode())
-        self.assertEqual(rv.status_code, 200)
-
     def test_done_is_either_true_or_false(self):
         self.create_bucket(self.token)
         self.create_item(self.token)
