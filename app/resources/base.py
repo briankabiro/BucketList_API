@@ -25,9 +25,9 @@ def requires_auth(f):
 				current_app.config['SECRET_KEY'])
 			user_id = user_id_dict['id']
 		except jwt.ExpiredSignatureError:
-			return 'Signature Expired. Please log in again'
+			return make_response(jsonify('Signature Expired. Please log in again'), 400)
 		except jwt.InvalidTokenError:
-			return 'Invalid token. please login again'
+			return make_response(jsonify('Invalid token. please login again'), 400)
 
 		return f(*args, user_id, **kwargs)
 
