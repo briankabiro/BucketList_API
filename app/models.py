@@ -35,7 +35,7 @@ class User(db.Model):
             {
                 'id': id,
                 'exp':
-                datetime.datetime.utcnow() + datetime.timedelta(minutes=60)
+                datetime.datetime.utcnow() + datetime.timedelta(hours=1200)
             },
             os.getenv('SECRET_KEY'))
 
